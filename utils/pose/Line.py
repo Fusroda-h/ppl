@@ -140,6 +140,10 @@ def list2array_append(pts_use,lines_use,ind_use):
 
 def drawlines_tp_reject_plane(pts,THR_LOOP, THR_PLANE, THR_ANGLE):
     # To pair up normal vectors, mk whole nn vector sets
+    if len(pts)%2==0:
+        pass
+    else:
+        pts = pts[:-1]
     num_pts = len(pts)
     num_pts -= num_pts&1
     num_nn_p2p = int(min(num_pts*0.01,100))
@@ -246,8 +250,6 @@ def drawlines_tp_same_num_section(pts,setA,setB):
     return [point_setA,point_setB],tmplines,[ind_seta,ind_setb]
 
 def drawlines_tp_divided_sections(pts,setA,setB):
-    num_pts = len(pts)
-
     # Equivalent number of points in each section
     if len(setA) == len(setB):
         points_tps, lines_tp, ind_tps = drawlines_tp_same_num_section(pts,setA,setB)
@@ -321,6 +323,10 @@ def get_two_same_clusters(X):
 
 def drawlines_tp_divide_sec_twosets(pts):
     # cluster_label = get_even_clusters(pts,int(len(pts)//2))
+    if len(pts)%2==0:
+        pass
+    else:
+        pts = pts[:-1]
     cluster_label = get_two_same_clusters(pts)
     setA = np.where(cluster_label==0)[0]
     setB = np.where(cluster_label==1)[0]

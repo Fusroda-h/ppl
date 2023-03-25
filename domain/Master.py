@@ -49,15 +49,18 @@ class Master(metaclass=ABCMeta):
 
         query_txt_path = os.path.join(dataset_path, "query_imgs.txt")
         
-        self.pts_3d_query, self.pts_2d_query = remove_outliers(self.pts_3d_query,self.pts_2d_query, Variable.THR_OUT_NN,Variable.THR_OUT_STD)
+        ##############################
+        # self.pts_3d_query, self.pts_2d_query = remove_outliers(self.pts_3d_query,self.pts_2d_query, Variable.THR_OUT_NN,Variable.THR_OUT_STD)
+        ##############################
+        
         self.queryNames, self.queryIds = pe.get_query_images(query_txt_path, self.pts_2d_query)
 
         self.scale = Variable.getScale(self.dataset)
         self.files = []
         self.checkedfiles = []
             
-        print("Load dataset debugging")
-        print("--- Query Images ----")
+        print("Load dataset sample for debugging")
+        print("--- Query Image ----")
         print(list(self.pts_2d_query.values())[0], "\n")
         print("--- Points 3D ----")
         print(list(self.pts_3d_query.values())[0], "\n")
@@ -65,7 +68,7 @@ class Master(metaclass=ABCMeta):
         print(list(self.image_dict_gt.values())[0], "\n")
         print("--- Images ----")
         print(list(self.camera_dict_gt.values())[0], "\n")
-        print("--- Query Images ----")
+        print("--- Query Image IDS ----")
         print(self.queryIds[:3], "\n")
         print("Dataset loaded successfully", "\n")
 
@@ -145,7 +148,7 @@ class Master(metaclass=ABCMeta):
     @abstractmethod
     def savePose(self, sparsity_level, noise_level):
         if Variable.REFINE_OPTION:
-            pose_output_path = os.path.join(self.output_path, "PoseAccuracy","refined",f"seed{Variable.RANDOM_SEED}")
+            pose_output_path = os.path.join(self.output_path, "PoseAccuracy","refined")
         else:    
             pose_output_path = os.path.join(self.output_path, "PoseAccuracy","notrefined")
         os.makedirs(pose_output_path, exist_ok=True)
@@ -367,14 +370,16 @@ class Master(metaclass=ABCMeta):
         print("Total recon line",len(self.lines_3D_recon))
         
         swap_level = Variable.SWAP_RATIO
-        ref_iter = 0
+        ref_iter = Variable.REFINE_ITER
         
         if estimator=='SPF':
             # No swap
-            est, self.ind_to_id_recon, self.id_to_ind_recon = calculate.coarse_est_spf_harsh(self.points_3D_recon, self.lines_3D_recon, self.ind_to_id_recon, swap_level)
-            ests_pts = calculate.refine_est_spf(self.points_3D_recon[0], self.lines_3D_recon, est, ref_iter)
+            # est, self.ind_to_id_recon, self.id_to_ind_recon = calculate.coarse_est_spf_harsh(self.points_3D_recon, self.lines_3D_recon, self.ind_to_id_recon, swap_level)
+            # ests_pts = calculate.refine_est_spf(self.points_3D_recon[0], self.lines_3D_recon, est, ref_iter)
+            est = calculate.coarse_est_spf(self.points_3D_recon[0], self.lines_3D_recon)
+            ests_pts, self.ind_to_id_recon, self.id_to_ind_recon = calculate.refine_est_spf_harsh(self.points_3D_recon, self.lines_3D_recon, self.ind_to_id_recon, swap_level, est, ref_iter)
         if estimator=='TPF':
-            ests_pts = calculate.coarse_est_tpf(self.points_3D_recon, self.lines_3D_recon, swap_level)    
+            ests_pts = calculate.coarse_est_tpf(self.points_3D_recon, self.lines_3D_recon, swap_level)
             
         info = [sparsity_level, noise_level, swap_level, estimator]
         self.saveReconpointswithswap(ests_pts,info)

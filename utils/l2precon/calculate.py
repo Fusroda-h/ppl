@@ -227,6 +227,105 @@ def refine_est_spf(pts,lines,est_peak,iter_num):
     
     return pts_est
 
+
+def refine_est_spf_harsh(points3d,lines,ind_to_ids,swap_levels,est_peak,iter_num):
+    pts, pts2 = points3d
+    ind_to_id1, ind_to_id2 = ind_to_ids
+    swapped_ind_id1, swapped_id_ind1 = [], []
+    swapped_ind_id2, swapped_id_ind2 = [], []
+    num_pts = pts.shape[0]    
+    num_nn_l2l = int(min(1000,0.05*num_pts))
+    num_nn_l2p = 100
+    num_nn_p2l = 100
+    
+    print("Refine estimation starts.")
+    
+    for i in range(iter_num):
+        pts_est = pts + est_peak.reshape(-1, 1) * lines
+        
+        nn_l2p = np.zeros([num_pts, num_nn_l2p], dtype=np.int32)
+        nn_p2l = np.zeros([num_pts, num_nn_p2l], dtype=np.int32)
+
+        pts = torch.from_numpy(pts).to(device)
+        pts_est = torch.from_numpy(pts_est).to(device)
+        lines = torch.from_numpy(lines).to(device)
+        nn_l2p = torch.from_numpy(nn_l2p).to(device)
+        nn_p2l = torch.from_numpy(nn_p2l).to(device)
+
+        print("Calculating l2p neighbours")
+        for i in range(num_pts):
+            nn_l2p[i, :] = get_n_closest_points_from_line_torch(pts[i, :].repeat(num_pts,1), lines[i, :].repeat(num_pts,1), pts_est, num_nn_l2p)
+
+        print("Calculating p2l neighbours")
+        for i in range(num_pts):
+            nn_p2l[i, :] = get_n_closest_lines_from_point_torch(pts_est[i, :].repeat(num_pts,1), pts, lines, num_nn_p2l)
+        pts = pts.cpu().numpy()
+        pts_est = pts_est.cpu().numpy()
+        lines = lines.cpu().numpy()
+        nn_l2p = nn_l2p.cpu().numpy()
+        nn_p2l = nn_p2l.cpu().numpy()
+
+        nns = {}
+
+        print("Finding refined estimates using intersection when possible")
+        print(num_pts)
+        for i in range(num_pts):
+
+            set_p2l = set(nn_p2l[i, :])
+            set_l2p = set(nn_l2p[i, :])
+            set_intersection = set_p2l.intersection(set_l2p)
+
+            if len(set_intersection) > 10:  # Threshld can be changed as well. A distance metric combining both l2p and p2l can also be defined.
+                nns[i] = np.array(list(set_intersection), dtype=np.int32)
+            else:
+                nns[i] = nn_l2p[i, :]
+                
+        # TODO error w.r.t swapped points
+        est_peak = estimate_all_pts_one_peak(pts, lines, nns)
+        errs = np.abs(est_peak)
+
+        print("Mean error : {}".format(np.mean(errs)))
+        print("Median error : {}".format(np.median(errs)))
+        print(f"Refine iteration {i} finished")
+    
+    dist = np.linalg.norm(np.subtract(pts2, pts), axis=1)
+    inv_est_peak = dist - est_peak
+    close_choice = est_peak<=inv_est_peak
+    closeid = np.where(close_choice,list(ind_to_id1.values()),list(ind_to_id2.values()))
+    distantid = np.where(close_choice,list(ind_to_id2.values()),list(ind_to_id1.values()))
+    
+    print("Coarse estimation done.")
+    
+    print("Start swap")
+    for swap in swap_levels:
+        new_ind_id1, new_ind_id2 = {},{}
+        new_id_ind1, new_id_ind2 = {},{}
+        swapped_setA,swapped_setB = swap_harsh_spf(closeid,distantid,swap)
+        for i in range(num_pts):
+            new_ind_id1[i] = swapped_setA[i]
+            new_id_ind1[swapped_setA[i]] = i
+            new_ind_id2[i] = swapped_setB[i]
+            new_id_ind2[swapped_setB[i]] = i
+        swapped_ind_id1.append(new_ind_id1)
+        swapped_id_ind1.append(new_id_ind1)
+        swapped_ind_id2.append(new_ind_id2)
+        swapped_id_ind2.append(new_id_ind2)
+    
+    # TODO error w.r.t swapped points
+    # errs_a = np.linalg.norm(np.subtract(pts_est1,pts),axis=1)
+    # errs_b = np.linalg.norm(np.subtract(pts_est2,pts2),axis=1)
+    
+    # print("Errors")
+    # print("1st Point Mean error : {}".format(np.mean(errs_a)))
+    # print("1st Point Median error : {}".format(np.median(errs_a)))
+    # print("2nd Point Mean error : {}".format(np.mean(errs_b)))
+    # print("2nd Point Median error : {}".format(np.median(errs_b)))
+    # print()
+
+    pts_est = pts + est_peak.reshape(-1, 1) * lines
+    
+    return pts_est, [swapped_ind_id1,swapped_ind_id2], [swapped_id_ind1,swapped_id_ind2]
+
 def point_distance(x, y):
     return np.linalg.norm(np.subtract(y, x))
 

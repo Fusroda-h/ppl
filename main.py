@@ -5,6 +5,7 @@ from domain.PointCloud import PointCloud
 from domain.OLC import OLC
 from domain.PPL import PPL
 from domain.PPLplus import PPLplus
+from domain.PPLcluster import PPLcluster
 
 from static import Variable
 
@@ -28,11 +29,11 @@ def parseArgument():
                         help='Colmap dataset to run localization test. [gerrald_hall, graham_hall, person_hall, south_building]',
                         default="apt1_living")
 
-    parser.add_argument('-e','--estimate', type = str2bool, default = False, help = 'estimate pose if True')
-    parser.add_argument('-r','--recover', type = str2bool, default = True, help = 'recover image if True')
-    parser.add_argument('-t','--test', type = str2bool, default = True, help = 'test the results if True')
-    parser.add_argument('-o','--onlyinv',type=str2bool,default=False, help = 'InvSfM only')
-    parser.add_argument('-i','--invsfm', type = str2bool, default = True, help = 'reconstruct the images if True')
+    parser.add_argument('-e','--estimate', type = str2bool, default = False, help = 'estimate camera pose')
+    parser.add_argument('-r','--recover', type = str2bool, default = True, help = 'recover images')
+    parser.add_argument('-t','--test', type = str2bool, default = True, help = 'check the line, index consistency')
+    parser.add_argument('-o','--onlyinv',type=str2bool,default=False, help = 'implement an inversion process only')
+    parser.add_argument('-i','--invsfm', type = str2bool, default = True, help = 'reconstruct the images from point cloud')
     parser.add_argument('-g','--gpus',type=str,default='cuda:0',help='Choose among cpu, cuda:0~4')
 
     args = parser.parse_args()
@@ -62,6 +63,9 @@ def main():
 
         elif inst.lower() == "pplplus":
             instances.append(PPLplus(cur_dir, dataset))
+            
+        elif inst.lower() == "pplcluster":
+            instances.append(PPLcluster(cur_dir, dataset))
         
         else:
             raise Exception("Map type not supported", inst)

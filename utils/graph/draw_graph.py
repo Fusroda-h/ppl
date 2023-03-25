@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from matplotlib.ticker import ScalarFormatter,NullFormatter 
 import numpy as np
 import sys
 import os
@@ -111,10 +113,12 @@ def drawPoints3DCDF(points_result_obj_lst, output_path):
 def drawQualityCurve(quality_result_obj_lst, output_path):
     for j,q_type in enumerate(GraphVAR.QUALITY_METIC):
         for err_type in GraphVAR.ERROR_TYPE:
-            fig, ax = plt.subplots(figsize=(6,3))
+            fig, ax = plt.subplots(figsize=(6.5,3))
             line_type_history = []
             est_type_history = []
+            lines = []
             for i, result_lst in enumerate(quality_result_obj_lst[j]):
+                markers = ['o','^','s','*','P','D']
                 x = []
                 y = []
                 line_type_history.append(result_lst[0].line_type)
@@ -123,12 +127,12 @@ def drawQualityCurve(quality_result_obj_lst, output_path):
                 for quality_obj in result_lst:
                     if err_type == "Rotation":
                         y.append(quality_obj.r_error_mean)
-                        ylabels = 'Rotation error (deg)'
+                        ylabels = 'Rot. error(log)[deg]'
 
                     elif err_type == "Translation":
                         # Scale is already applied when saving the pose accuracy text file
                         y.append(quality_obj.t_error_mean)
-                        ylabels = 'Translation error (m)'
+                        ylabels = 'Trans. error(log)[m]'
                 
                     x.append(quality_obj.img_quality_mean)
                 
@@ -139,18 +143,37 @@ def drawQualityCurve(quality_result_obj_lst, output_path):
                     label_name = f'{quality_obj.line_type}'
                     
                 ax.plot(x, y, color=GraphVAR.LINE_COLOR[i], label=label_name)
+                tmpline = Line2D([],[], color=GraphVAR.LINE_COLOR[i], label=label_name, marker=markers[i])
+                lines.append(tmpline)
                 for m in range(len(GraphVAR.QUALITY_SPARSITY)):
-                    ax.scatter(x[m], y[m], s = GraphVAR.DOT_SIZE[m]*200, c=GraphVAR.LINE_COLOR[i], alpha=0.3)
+                    ax.scatter(x[m], y[m], s = GraphVAR.DOT_SIZE[m]*200, c=GraphVAR.LINE_COLOR[i], alpha=0.3, marker=markers[i])
 
-                axisfontlabel = {"fontsize":18,"color":"black"}
-                ax.set_xlabel(q_type, fontdict = axisfontlabel)
-                ax.set_ylabel(ylabels, fontdict = axisfontlabel)
-                ax.set_yscale('log')
-                legend_properties = {'weight':'light'}
-                ax.legend(fontsize=10,prop=legend_properties)
+            axisfontlabel = {"fontsize":18,"color":"black"}
+            
+            ##############################
+            manolis_yticks = {'Rotation':[0.04,0.06,0.1,0.2,0.3],'Translation':[0.001,0.002,0.003,0.006]}
+            manolis_xticks = {'MAE':[30,40,50,60],'PSNR':[9,10,12,15,16],'SSIM':[0.35,0.4,0.5,0.55]}
+            ##############################
+            
+            ax.set_xlabel(q_type, fontdict = axisfontlabel)
+            ax.set_ylabel(ylabels, fontdict = axisfontlabel)
+            ax.set_yscale('log')
+            ax.set_xscale('log')
+            
+            ##############################
+            ax.set_xticks(manolis_xticks[q_type])
+            ax.set_yticks(manolis_yticks[err_type])
+            ax.set_xticklabels(manolis_xticks[q_type])
+            ax.set_yticklabels(manolis_yticks[err_type])
+            ax.xaxis.set_minor_locator(plt.NullLocator())
+            ax.yaxis.set_minor_locator(plt.NullLocator())
+            ##############################
+            
+            legend_properties = {'weight':'light'}
+            ax.legend(handles=lines,fontsize=10,prop=legend_properties)
 
-                fig.tight_layout()
-                title = f'{err_type}_{q_type}'
+            fig.tight_layout()
+            title = f'{err_type}_{q_type}'
             
             dirname = os.path.join(output_path, "Curve", "Quality",q_type, quality_obj.dataset_name)
             os.makedirs(dirname, exist_ok=True)

@@ -149,7 +149,7 @@ class OLC(Master):
             super().saveReconpoints(ests_pts, info)
             
         if estimator=='TPF':
-            print("Wrong estimation")
+            print("OLC should't be estimated with TPF")
             pass
     
     def reconTest(self,estimator):

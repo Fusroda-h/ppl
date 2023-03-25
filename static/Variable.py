@@ -16,13 +16,13 @@ RANDOM_SEED = 91
 
 # Robustness
 # SPARSITY LEVEL should have at least one value for any process to run
-SPARSITY_LEVEL = [0.011] # No feature image
-# SPARSITY_LEVEL = [1.0, 0.5, 0.25, 0.1, 0.05] # for all data
+# SPARSITY_LEVEL = [1.0] # No feature image
+SPARSITY_LEVEL = [1.0, 0.5, 0.25, 0.1, 0.05] # for all data
 # NOISE LEVEL should have at least one value for any process to run
 NOISE_LEVEL = [0.0]
 # Multiple LINE TPYE could be selected from ["OLC","PPL","PPLplus"]
-# LINE_TYPE = ["PC","OLC", "PPL", "PPLplus"]
-LINE_TYPE = ["PPL","PPLplus"]
+LINE_TYPE = ["PC","OLC", "PPL", "PPLplus"]
+# LINE_TYPE = ["PPLcluster"]
 
 # Poselib options
 BUNDLE_OPTIONS = poselib.BundleOptions()
@@ -56,8 +56,8 @@ REFINE_ITER = 3
 
 # Structure Recovery
 ESTIMATOR = ["SPF","TPF"]
-SWAP_RATIO = [1.0,0.75,0.5,0.25,0]
-# SWAP_RATIO = [1.0,0.5,0]
+# SWAP_RATIO = [1.0,0.75,0.5,0.25,0]
+SWAP_RATIO = [0.5]
 
 # Image Reconvery
 # Input atrribute choices=['depth','depth_sift','depth_rgb','depth_sift_rgb']

@@ -19,7 +19,9 @@ def load_result_obj(_pose, _recover, _quality):
             ro = ResultObject(pose_text)
             base_dir, dataset_dir, dataset_name, filename = findTextPath(pose_text, "PoseAccuracy", ro)
             if GraphVAR.REFINE_OPTION:
-                ro.loadPoseResult(os.path.join(base_dir, "output", dataset_dir, dataset_name, "PoseAccuracy","refined", filename))
+                #####################################
+                ro.loadPoseResult(os.path.join(base_dir, "output", dataset_dir, dataset_name, "PoseAccuracy","refined","seed91", filename))
+                #####################################
             else:
                 ro.loadPoseResult(os.path.join(base_dir, "output", dataset_dir, dataset_name, "PoseAccuracy","notrefined", filename))
 
