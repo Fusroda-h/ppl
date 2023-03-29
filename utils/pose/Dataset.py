@@ -1,4 +1,4 @@
-from static import Variable
+from static import variable
 from utils import read_write_model
 import collections
 import os
@@ -76,13 +76,13 @@ def loadDatasetColmap(base_dir):
 
 
 def loadDataset(base_dir, dataset):
-    if dataset in Variable.CAMBRIDGE_DATASET:
+    if dataset in variable.CAMBRIDGE_DATASET:
         return loadDatasetCambridge(base_dir)
     
-    if dataset in Variable.ENERGY_DATASET:
+    if dataset in variable.ENERGY_DATASET:
         return loadDatasetEnergy(base_dir)
     
-    if dataset in Variable.COLMAP_DATASET:
+    if dataset in variable.COLMAP_DATASET:
         return loadDatasetColmap(base_dir)
     
     raise Exception("Not Supported Dataset")

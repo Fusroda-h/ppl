@@ -1,13 +1,12 @@
 import os
 import argparse
 
-from domain.PointCloud import PointCloud
-from domain.OLC import OLC
-from domain.PPL import PPL
-from domain.PPLplus import PPLplus
-from domain.PPLcluster import PPLcluster
+from domain.pointcloud import PointCloud
+from domain.olc import OLC
+from domain.ppl import PPL
+from domain.pplplus import PPLplus
 
-from static import Variable
+from static import variable
 
 from utils.read_write_model import *
 
@@ -34,7 +33,7 @@ def parseArgument():
     parser.add_argument('-t','--test', type = str2bool, default = True, help = 'check the line, index consistency')
     parser.add_argument('-o','--onlyinv',type=str2bool,default=False, help = 'implement an inversion process only')
     parser.add_argument('-i','--invsfm', type = str2bool, default = True, help = 'reconstruct the images from point cloud')
-    parser.add_argument('-g','--gpus',type=str,default='cuda:0',help='Choose among cpu, cuda:0~4')
+    parser.add_argument('-g','--gpus',type=str,default='cpu',help='Choose among cpu, cuda:0~4')
 
     args = parser.parse_args()
 
@@ -48,10 +47,10 @@ def parseArgument():
 def main():
     dataset, estimate_pose, recover_pts, recon_img, test, onlyinv, device = parseArgument()
     
-    Variable.raise_errors(dataset)
+    variable.raise_errors(dataset)
     
     instances = []
-    for inst in Variable.LINE_TYPE:
+    for inst in variable.LINE_TYPE:
         if inst.lower() == "pc":
             instances.append(PointCloud(cur_dir, dataset))
 
@@ -64,9 +63,6 @@ def main():
         elif inst.lower() == "pplplus":
             instances.append(PPLplus(cur_dir, dataset))
             
-        elif inst.lower() == "pplcluster":
-            instances.append(PPLcluster(cur_dir, dataset))
-        
         else:
             raise Exception("Map type not supported", inst)
 
@@ -77,12 +73,12 @@ def main():
             # Sparsity only: noise level = 0
             # Noise only: sparisty level = 1
             # Sparsity & Noise: set any float to sparsity & noise level
-            for sparsity_level in Variable.SPARSITY_LEVEL:
+            for sparsity_level in variable.SPARSITY_LEVEL:
                 inst.maskSparsity(sparsity_level)
 
                 # Note that NOISE_LEVEL should have at least one value for this to run
                 # To turn off noise effect, erase other intensity levels, keeping only zero. 
-                for noise_level in Variable.NOISE_LEVEL:
+                for noise_level in variable.NOISE_LEVEL:
                     if estimate_pose:
                         for query_id in inst.queryIds:
                             inst.matchCorrespondences(query_id)
@@ -92,19 +88,19 @@ def main():
                         inst.savePose(sparsity_level, noise_level)
 
                     if recover_pts:
-                        for esttype in Variable.ESTIMATOR:
+                        for esttype in variable.ESTIMATOR:
                             inst.recoverPts(esttype, sparsity_level, noise_level)
 
                     if test:
-                        for esttype in Variable.ESTIMATOR:
+                        for esttype in variable.ESTIMATOR:
                             inst.test(recover_pts,esttype)
 
     if onlyinv or recon_img:
         for inst in instances:
-            for sp in Variable.SPARSITY_LEVEL:
-                for n in Variable.NOISE_LEVEL:
-                    for est in Variable.ESTIMATOR:
-                        for sw in Variable.SWAP_RATIO:
+            for sp in variable.SPARSITY_LEVEL:
+                for n in variable.NOISE_LEVEL:
+                    for est in variable.ESTIMATOR:
+                        for sw in variable.SWAP_RATIO:
                             if inst.map_type=='PC':
                                 est = 'noest'
                             inst.append_filenames(sp,n,est,sw)

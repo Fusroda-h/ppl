@@ -1,4 +1,4 @@
-from static import Variable
+from static import variable
 import os
 
 # Combination of result to draw graph
@@ -67,7 +67,7 @@ def VERIFY_TEXT_FILE(filename, result_type):
     swap_level = float(split_filename[-1][2:-4])
 
     base_dir = os.path.abspath(os.curdir)
-    dataset_dir = Variable.getDatasetName(dataset_name)
+    dataset_dir = variable.getDatasetName(dataset_name)
     
     filepath = os.path.join(base_dir, 'output', dataset_dir, dataset_name, result_type, filename)
 

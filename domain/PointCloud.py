@@ -1,16 +1,16 @@
-from .Master import Master
+from .master import Master
 import numpy as np
 import poselib
 import os
 import math
 
-import utils.pose.PoseEstimation as pe
-import utils.pose.Vector as Vector
-from utils.pose import Dataset
+import utils.pose.pose_estimation as pe
+import utils.pose.vector as vector
+from utils.pose import dataset
 from utils import read_write_model
-from static import Variable
+from static import variable
 
-np.random.seed(Variable.RANDOM_SEED)
+np.random.seed(variable.RANDOM_SEED)
 
 class PointCloud(Master):
     def __init__(self, dataset_path, output_path):
@@ -83,7 +83,7 @@ class PointCloud(Master):
             cam_id = gt_img.camera_id
             cam_p3p = pe.convert_cam(self.camera_dict_gt[cam_id])
 
-            res = poselib.estimate_absolute_pose(self._x1, self._p2, cam_p3p, Variable.RANSAC_OPTIONS, Variable.BUNDLE_OPTIONS,Variable.REFINE_OPTION)
+            res = poselib.estimate_absolute_pose(self._x1, self._p2, cam_p3p, variable.RANSAC_OPTIONS, variable.BUNDLE_OPTIONS,variable.REFINE_OPTION)
             np.savetxt("new_test_p2",self._p2)
             np.savetxt("new_test_x1",self._x1)
             super().savePoseAccuracy(res, gt_img, cam_p3p)

@@ -3,9 +3,8 @@ import os
 import sys
 
 from tqdm import tqdm
-from sklearn.cluster import KMeans
 import torch
-import static.Variable as VAR
+import static.variable as VAR
 
 device = torch.device(VAR.CUDA)
 np.random.seed(VAR.RANDOM_SEED)
@@ -68,13 +67,6 @@ def drawlines_ppl(pts3d,ids):
 
 def drawlines_pplplus(pts3d,ids,THR_LOOP=1000,THR_PLANE=30,THR_ANGLE=20):
     pts, lines, pair_ind = drawlines_tp_reject_plane(pts3d,THR_LOOP, THR_PLANE, THR_ANGLE)
-    
-    ind_to_id, id_to_ind = id_ind_connect(pair_ind,ids)
-
-    return pts, lines, ind_to_id, id_to_ind
-
-def drawlines_pplcluster(pts3d,ids):
-    pts, lines, pair_ind = drawlines_tp_divide_sec_twosets(pts3d)
     
     ind_to_id, id_to_ind = id_ind_connect(pair_ind,ids)
 
@@ -150,8 +142,6 @@ def drawlines_tp_reject_plane(pts,THR_LOOP, THR_PLANE, THR_ANGLE):
     num_nn_p2p -= num_nn_p2p&1
     nn_vec = np.zeros((num_pts, num_nn_p2p, 3))
     print("Make Nearest Neighbor vector set")
-    # for i in tqdm(range(num_pts)):
-    #     nn_vec[i] = get_vec_from_nn(pts[i],pts,num_nn_p2p) # (n, nn_p2p,3)
     
     pts = torch.from_numpy(pts).to(device)
     nn_vec = torch.from_numpy(nn_vec).to(device)
@@ -219,136 +209,3 @@ def drawlines_tp_reject_plane(pts,THR_LOOP, THR_PLANE, THR_ANGLE):
     return [pts_tp_a, pts_tp_b], lines_tp, [ind_tp_a, ind_tp_b]
 
 
-def test_ppl_plus(pts3d,pts, pts2, lines, ind_to_id, ind_to_id2):
-    # TEST plane
-    ids = np.array([id for id in ind_to_id.values()])
-    id_pts = np.array([pts3d[id].xyz for id in ids])
-    print("Check point setA from same id")
-    print(np.equal(pts,id_pts).all())
-    
-    ids2 = np.array([id for id in ind_to_id2.values()])
-    id_pts2 = np.array([pts3d[id].xyz for id in ids2])
-    print("Check point setB from same id")
-    print(np.equal(pts2,id_pts2).all())
-    
-    subt = np.subtract(pts2,pts)
-    subt /= np.linalg.norm(subt,axis=1,keepdims=True)+1e-7
-    print("Check line pts match")
-    print(np.isclose(subt,lines).all())
-
-def drawlines_tp_same_num_section(pts,setA,setB):
-    permut_a = np.random.permutation(len(setA))
-    permut_b = np.random.permutation(len(setB))
-    
-    ind_seta = setA[permut_a]
-    ind_setb = setB[permut_b]
-    point_setA = pts[ind_seta]
-    point_setB = pts[ind_setb]
-    tmplines = np.subtract(point_setB,point_setA)
-    tmplines /= np.linalg.norm(tmplines,axis=1,keepdims=True)+1e-7
-    
-    return [point_setA,point_setB],tmplines,[ind_seta,ind_setb]
-
-def drawlines_tp_divided_sections(pts,setA,setB):
-    # Equivalent number of points in each section
-    if len(setA) == len(setB):
-        points_tps, lines_tp, ind_tps = drawlines_tp_same_num_section(pts,setA,setB)
-        
-    else:
-        print("biased")
-        print("setA:",len(setA),"setB",len(setB))
-        if len(setA)>len(setB):
-            biggerSet = setA
-            smallerSet = setB
-        else:
-            biggerSet = setB
-            smallerSet = setA
-        print()
-        print("Check again if setA, setB are same number")
-        print("setA:",len(setA),"setB",len(setB))
-        num_resi = len(biggerSet) - len(smallerSet)
-        
-        # Draw lines for equivalent number of set
-        points_tps, lines_tp, ind_tps = drawlines_tp_same_num_section(pts,biggerSet[:-num_resi],smallerSet)
-        
-    return points_tps, lines_tp, ind_tps
-
-def get_two_same_clusters(X):
-    print("Clustering starts")
-    n_clusters = 2
-    kmeans = KMeans(n_clusters)
-    print("Kmean_beforefit")
-    kmeans.fit(X)
-    print("Kmean_end")
-    centers = kmeans.cluster_centers_
-    labels = kmeans.labels_
-
-    label0 = np.where(labels==0)[0]
-    label1 = np.where(labels==1)[0]
-    d_00 = np.linalg.norm(np.subtract(X[label0],centers[0]),axis=1)
-    d_01 = np.linalg.norm(np.subtract(X[label0],centers[1]),axis=1)
-    
-    dist_0 = np.subtract(d_00,d_01)
-    
-    d_10 = np.linalg.norm(np.subtract(X[label1],centers[0]),axis=1)
-    d_11 = np.linalg.norm(np.subtract(X[label1],centers[1]),axis=1)
-    
-    dist_1 = np.subtract(d_11,d_10)
-    
-    table_0 = {}
-    table_1 = {}
-    for i,d in enumerate(dist_0):
-        table_0[d] = label0[i]
-    for i,d in enumerate(dist_1):
-        table_1[d] = label1[i]
-        
-    same_size = len(X)//2
-    if len(label0)>len(label1):
-        resi = len(label0) - same_size
-        change_ind = np.array([table_0[k] for k in sorted(table_0)[-resi:]])
-        labels[change_ind] = 1
-    else:
-        resi = len(label1) - same_size
-        change_ind = np.array([table_1[k] for k in sorted(table_1)[-resi:]])
-        labels[change_ind] = 0
-    
-    # Test
-    set0=np.where(labels==0)[0]
-    set1=np.where(labels==1)[0]
-    print("Test if setA and setB is same l:",len(set0) ==len(set1), len(set0))
-    print("Clustering ends")
-    print()
-        
-    return labels
-
-def drawlines_tp_divide_sec_twosets(pts):
-    # cluster_label = get_even_clusters(pts,int(len(pts)//2))
-    if len(pts)%2==0:
-        pass
-    else:
-        pts = pts[:-1]
-    cluster_label = get_two_same_clusters(pts)
-    setA = np.where(cluster_label==0)[0]
-    setB = np.where(cluster_label==1)[0]
-    
-    # To pair up normal vectors, mk whole nn vector sets
-    num_pts = len(pts)
-    num_nn_p2p = int(min(num_pts*0.01,100))
-    num_nn_p2p -= num_nn_p2p&1
-    nn_vec = np.zeros((num_pts, num_nn_p2p, 3))
-    print("Make Nearest Neighbor vector set")
-    # for i in tqdm(range(num_pts)):
-    #     nn_vec[i] = get_vec_from_nn(pts[i],pts,num_nn_p2p) # (n, nn_p2p,3)
-    pts = torch.from_numpy(pts).to(device)
-    nn_vec = torch.from_numpy(nn_vec).to(device)
-    for i in tqdm(range(num_pts)):
-        nn_vec[i] = get_vec_from_nn_torch(pts[i],pts,num_nn_p2p) # (n, nn_p2p,3)
-    pts = pts.cpu().numpy()
-    nn_vec = nn_vec.cpu().numpy()
-
-    # tp draw lines
-    [pts_tp_a, pts_tp_b], lines_tp, [ind_tp_a, ind_tp_b] = drawlines_tp_divided_sections(pts,setA,setB)  
-    
-    print("Test index_a,b has no intersection :",all([True if i not in ind_tp_b else False for i in ind_tp_a]))
-    
-    return [pts_tp_a, pts_tp_b], lines_tp, [ind_tp_a, ind_tp_b]

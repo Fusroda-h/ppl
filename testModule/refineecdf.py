@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 cur_dir = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.abspath("."))
 
-from static import GraphVAR
-from static import Variable
+from static import graph_var
+from static import variable
 from domain.loader.ResultObject import ResultObject
 
 def rfcheck_drawPoseAccuracyCDF(pose_result_obj_lst, output_path):
-    for errtype in GraphVAR.ERROR_TYPE:
+    for errtype in graph_var.ERROR_TYPE:
         fig, ax = plt.subplots(figsize=(8,4))
         sparsity_level_history = []
         noise_level_history = []
@@ -37,7 +37,7 @@ def rfcheck_drawPoseAccuracyCDF(pose_result_obj_lst, output_path):
 
             legend = rf_option+pose_obj.line_type + "-" + str(pose_obj.sparsity_level)
 
-            ax.plot(bins[:-1], cum_e, label=legend, c=GraphVAR.LINE_COLOR[i])
+            ax.plot(bins[:-1], cum_e, label=legend, c=graph_var.LINE_COLOR[i])
             ax.set_xlim([0, max(errs)/2])
             # ax.set_xlim([0, 1.5])
             ax.set_ylim([0,1.0])
@@ -53,7 +53,7 @@ def rfcheck_drawPoseAccuracyCDF(pose_result_obj_lst, output_path):
            
 def findTextPath(text_name, result_type, ro):
     base_dir = os.path.abspath(os.curdir)
-    dataset_dir = Variable.getDatasetName(ro.dataset_name)
+    dataset_dir = variable.getDatasetName(ro.dataset_name)
     dataset_name = ro.dataset_name
     filename = text_name
     
@@ -71,7 +71,7 @@ def rfcheck_load_result_obj(_pose, _recover, _quality):
 
     if _pose:
         for i in range(2):
-            for pose_text in GraphVAR.POSE_TEXT:
+            for pose_text in graph_var.POSE_TEXT:
                 ro = ResultObject(pose_text)
                 base_dir, dataset_dir, dataset_name, filename = findTextPath(pose_text, "PoseAccuracy", ro)
                 

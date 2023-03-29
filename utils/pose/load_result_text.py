@@ -6,8 +6,8 @@ import glob
 cur_dir = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.abspath("."))
 
-from static import Variable
-from static import GraphVAR
+from static import variable
+from static import graph_var
 from domain.loader.ResultObject import ResultObject
 
 
@@ -15,13 +15,11 @@ def load_result_obj(_pose, _recover, _quality):
     result_obj = []
 
     if _pose:
-        for pose_text in GraphVAR.POSE_TEXT:
+        for pose_text in graph_var.POSE_TEXT:
             ro = ResultObject(pose_text)
             base_dir, dataset_dir, dataset_name, filename = findTextPath(pose_text, "PoseAccuracy", ro)
-            if GraphVAR.REFINE_OPTION:
-                #####################################
-                ro.loadPoseResult(os.path.join(base_dir, "output", dataset_dir, dataset_name, "PoseAccuracy","refined","seed91", filename))
-                #####################################
+            if graph_var.REFINE_OPTION:
+                ro.loadPoseResult(os.path.join(base_dir, "output", dataset_dir, dataset_name, "PoseAccuracy","refined", filename))
             else:
                 ro.loadPoseResult(os.path.join(base_dir, "output", dataset_dir, dataset_name, "PoseAccuracy","notrefined", filename))
 
@@ -30,11 +28,11 @@ def load_result_obj(_pose, _recover, _quality):
         return result_obj
 
     elif _recover:
-        for recover_text in GraphVAR.POINT_TEXT:
+        for recover_text in graph_var.POINT_TEXT:
             ro = ResultObject(recover_text)
 
             base_dir, dataset_dir, dataset_name, filename = findTextPath(recover_text, "L2Precon", ro)
-            gt_img_path = os.path.join(base_dir, GraphVAR.DATASET_MOUNT, dataset_dir, dataset_name, "sparse_queryadded", "points3D.txt")
+            gt_img_path = os.path.join(base_dir, graph_var.DATASET_MOUNT, dataset_dir, dataset_name, "sparse_queryadded", "points3D.txt")
             ro.loadReconResult(os.path.join(base_dir, "output", dataset_dir, dataset_name, "L2Precon", filename), gt_img_path)
 
             result_obj.append(ro)
@@ -42,17 +40,17 @@ def load_result_obj(_pose, _recover, _quality):
         return result_obj
 
     elif _quality:
-        for q_type in GraphVAR.QUALITY_METIC:
+        for q_type in graph_var.QUALITY_METIC:
             result_temp = []
-            for temp_text_name in GraphVAR.QUALITY_TEXT:
+            for temp_text_name in graph_var.QUALITY_TEXT:
                 result_temp2 =[]
-                for sparisity_level in GraphVAR.QUALITY_SPARSITY:
-                    pose_text, quality_text, est_type = GraphVAR.getPoseQualityText(temp_text_name, sparisity_level,q_type)
+                for sparisity_level in graph_var.QUALITY_SPARSITY:
+                    pose_text, quality_text, est_type = graph_var.getPoseQualityText(temp_text_name, sparisity_level,q_type)
                     pose_text_temp = pose_text.replace("NA", est_type)
                     ro = ResultObject(pose_text_temp)
 
                     base_dir, dataset_dir, dataset_name, filename = findTextPath(pose_text, "PoseAccuracy", ro)                    
-                    if GraphVAR.REFINE_OPTION:
+                    if graph_var.REFINE_OPTION:
                         ro.loadPoseResult(os.path.join(base_dir, "output", dataset_dir, dataset_name, "PoseAccuracy","refined", filename))
                     else:
                         ro.loadPoseResult(os.path.join(base_dir, "output", dataset_dir, dataset_name, "PoseAccuracy","notrefined", filename))
@@ -72,7 +70,7 @@ def load_result_obj(_pose, _recover, _quality):
 
 def findTextPath(text_name, result_type, ro):
     base_dir = os.path.abspath(os.curdir)
-    dataset_dir = Variable.getDatasetName(ro.dataset_name)
+    dataset_dir = variable.getDatasetName(ro.dataset_name)
     dataset_name = ro.dataset_name
     filename = text_name
     

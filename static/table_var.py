@@ -1,18 +1,16 @@
-from static import Variable
+from static import variable
 import os
 
 # Combination of result to draw graph
 # DO NOT FORGET TO ADD EXTENSION (.txt)
 
-# Nas mount options "dataset", "Nas"
-DATASET_MOUNT = "Nas"
-# DATASET_MOUNT = "dataset"
+DATASET_MOUNT = "dataset"
 DATASET = ["apt1_kitchen", "apt1_living", "apt2_bed", "apt2_kitchen", 
             "apt2_living", "apt2_luke", "office1_gates362", "office1_gates381",
             "office1_lounge", "office1_manolis", "office2_5a", "office2_5b",
             "kingscollege","oldhospital", "shopfacade", "stmaryschurch"]
 
-REFINE_OPTION = 0
+REFINE_OPTION = 1
 
 # Pose Accuracy ECDF: Draw All Lines in One CDF Figure
 POSE_TEXT = ["PC_DATASET_NA_sp1.0_n0.0_sw0.txt",
@@ -66,7 +64,7 @@ def VERIFY_TEXT_FILE(filename, result_type):
     swap_level = float(split_filename[-1][2:-4])
 
     base_dir = os.path.abspath(os.curdir)
-    dataset_dir = Variable.getDatasetName(dataset_name)
+    dataset_dir = variable.getDatasetName(dataset_name)
     
     filepath = os.path.join(base_dir, 'output', dataset_dir, dataset_name, result_type, filename)
 

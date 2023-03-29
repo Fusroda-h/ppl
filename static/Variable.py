@@ -3,41 +3,31 @@ import pandas as pd
 import os
 from utils.invsfm.methods import get_query_image_names
 
-# Nas mount options "dataset", "Nas"
-DATASET_MOUNT = "Nas"
-# DATASET_MOUNT = "dataset"
+DATASET_MOUNT = "dataset"
 
 # GPU, CPU usage options
-CUDA = 'cuda:0'
-# CUDA = 'cpu'
+CUDA = 'cpu'
 
-REFINE_OPTION = 1
-RANDOM_SEED = 91
-
-# Robustness
 # SPARSITY LEVEL should have at least one value for any process to run
 # SPARSITY_LEVEL = [1.0] # No feature image
 SPARSITY_LEVEL = [1.0, 0.5, 0.25, 0.1, 0.05] # for all data
 # NOISE LEVEL should have at least one value for any process to run
 NOISE_LEVEL = [0.0]
+
+##################################################
+############## Line type selection ###############
+##################################################
 # Multiple LINE TPYE could be selected from ["OLC","PPL","PPLplus"]
 LINE_TYPE = ["PC","OLC", "PPL", "PPLplus"]
-# LINE_TYPE = ["PPLcluster"]
 
-# Poselib options
-BUNDLE_OPTIONS = poselib.BundleOptions()
-RANSAC_OPTIONS = poselib.RansacOptions()
-# RANSAC_OPTIONS["max_iterations"] = 2
-# RANSAC_OPTIONS["max_epipolar_error"] = 12.0
+# Options for PPLplus
+THR_LOOP = 1000
+THR_PLANE = 30
+THR_ANGLE = 20
 
-# Dataset options
-CAMBRIDGE_DATASET = ["kingscollege","oldhospital", "shopfacade", "stmaryschurch", "trinitygreatcourt","street"]
-COLMAP_DATASET = ["south_building", "gerrard_hall", "graham_hall", "person_hall"]
-ENERGY_DATASET = ["apt1_kitchen", "apt1_living", "apt2_bed", "apt2_kitchen", 
-                    "apt2_living", "apt2_luke", "office1_gates362", "office1_gates381",
-                    "office1_lounge", "office1_manolis", "office2_5a", "office2_5b"]
-
-# Outlier Threshold
+##################################################
+############### Outlier Threshold ################
+##################################################
 # nb_neighbors, which specifies how many neighbors are taken into account 
 # in order to calculate the average distance for a given point.
 THR_OUT_NN = 20
@@ -46,20 +36,19 @@ THR_OUT_NN = 20
 # The lower this number the more aggressive the filter will be.
 THR_OUT_STD = 10
 
-# PPL options
-THR_LOOP = 1000
-THR_PLANE = 30
-THR_ANGLE = 20
-
-# SPF options
+##################################################
+###### Line to point reconstruction options ######
+##################################################
+# Chelani et al. (single-peak finding) options
 REFINE_ITER = 3
-
 # Structure Recovery
 ESTIMATOR = ["SPF","TPF"]
-# SWAP_RATIO = [1.0,0.75,0.5,0.25,0]
-SWAP_RATIO = [0.5]
+# Ratio of swapping
+SWAP_RATIO = [1.0,0.75,0.5,0.25,0]
 
-# Image Reconvery
+##################################################
+################# Image recovery #################
+##################################################
 # Input atrribute choices=['depth','depth_sift','depth_rgb','depth_sift_rgb']
 INPUT_ATTR = 'depth_sift_rgb'
 # INPUT_ATTR = 'depth' # No feature test
@@ -72,11 +61,31 @@ CROP_SIZE = 512
 SAMPLE_SIZE = 32
 SAMPLE_SIZE = max(SAMPLE_SIZE,1)
 
-#-------------------------------------------------------------------------------
-# Raise errors
-#-------------------------------------------------------------------------------
-# SPARSITY LEVEL should have at least one value for any process to run
 
+##################################################
+########### Camera relocalization error ##########
+##################################################
+
+# Turn on off the refinement on pose estimation
+REFINE_OPTION = 1
+RANDOM_SEED = 91
+# Poselib options
+BUNDLE_OPTIONS = poselib.BundleOptions()
+RANSAC_OPTIONS = poselib.RansacOptions()
+
+
+##################################################
+################## Raise errors ##################
+##################################################
+
+# Dataset check
+CAMBRIDGE_DATASET = ["kingscollege","oldhospital", "shopfacade", "stmaryschurch", "trinitygreatcourt","street"]
+COLMAP_DATASET = ["south_building", "gerrard_hall", "graham_hall", "person_hall"]
+ENERGY_DATASET = ["apt1_kitchen", "apt1_living", "apt2_bed", "apt2_kitchen", 
+                    "apt2_living", "apt2_luke", "office1_gates362", "office1_gates381",
+                    "office1_lounge", "office1_manolis", "office2_5a", "office2_5b"]
+
+# SPARSITY LEVEL should have at least one value for any process to run
 def raise_errors(dataset):
     work_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     # Scale size should be smaller than crop size
@@ -87,14 +96,6 @@ def raise_errors(dataset):
     print("Check query image list accord with query textfile")
     basepath = os.path.join(work_dir, DATASET_MOUNT, getDatasetName(dataset),dataset)
     path_querytxt = os.path.join(basepath,'query_imgs.txt')
-    # path_queryfolder = os.path.join(basepath,'query')
-    # imgname_list_from_txt = get_query_image_names(path_querytxt)
-    # imgname_list = os.listdir(path_queryfolder)
-    # imgname_list = [img for img in imgname_list if img[-3:]=='jpg']
-    # for imgname in imgname_list:
-    #     if imgname not in imgname_list_from_txt:
-    #         raise IndexError("Query images & txt files don't match")
-    # print("Matches!",end='\n')
 
 def getDatasetName(dataset):
     if dataset.lower() in CAMBRIDGE_DATASET:

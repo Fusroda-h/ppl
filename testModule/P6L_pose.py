@@ -9,7 +9,7 @@ cur_dir = os.path.abspath(os.path.dirname(__file__))
 
 sys.path.append(os.path.join(cur_dir, "../"))
 
-from utils.pose.PoseEstimation import *
+from utils.pose.pose_estimation import *
 
 def main():
   pts = np.random.rand(100,3)

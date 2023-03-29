@@ -1,5 +1,5 @@
 import os 
-from static.Variable import getDatasetName
+from static.variable import getDatasetName
 import utils.read_write_model as model
 import numpy as np
 

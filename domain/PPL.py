@@ -1,18 +1,20 @@
-from .Master import Master
+from .master import Master
 import numpy as np
 import poselib
 from collections import defaultdict
 
-import testModule.LineCloud as lineCloudTest
-import testModule.Recontest as Recontest
+import testModule.linecloud as lineCloudTest
+import testModule.recontest as recontest
 
-import utils.pose.PoseEstimation as pe
-import utils.pose.Vector as Vector
-from utils.pose import Dataset
-from utils.pose import Line
+import utils.pose.pose_estimation as pe
+import utils.pose.vector as vector
+from utils.pose import dataset
+from utils.pose import line
 from utils.l2precon import calculate
-from static import Variable
-np.random.seed(Variable.RANDOM_SEED)
+from static import variable
+
+np.random.seed(variable.RANDOM_SEED)
+
 class PPL(Master):
     def __init__(self, dataset_path, output_path):
         self.pts_to_line = dict()
@@ -46,7 +48,7 @@ class PPL(Master):
         _pts_3d = np.array([v.xyz for v in self.pts_3d_query.values()])
         _pts_ids = np.array([k for k in self.pts_3d_query.keys()])
 
-        self.points_3D, self.line_3d, self.ind_to_id, self.id_to_ind = Line.drawlines_ppl(_pts_3d, _pts_ids)
+        self.points_3D, self.line_3d, self.ind_to_id, self.id_to_ind = line.drawlines_ppl(_pts_3d, _pts_ids)
 
         super().mapPointtoPPL()
 
@@ -112,7 +114,7 @@ class PPL(Master):
             cam_id = gt_img.camera_id
             cam_p6l = [pe.convert_cam(self.camera_dict_gt[cam_id])]
 
-            res = poselib.estimate_p6l_relative_pose(self._x1, self._p2, self._x2, cam_p6l, cam_p6l, Variable.RANSAC_OPTIONS, Variable.BUNDLE_OPTIONS, Variable.REFINE_OPTION)
+            res = poselib.estimate_p6l_relative_pose(self._x1, self._p2, self._x2, cam_p6l, cam_p6l, variable.RANSAC_OPTIONS, variable.BUNDLE_OPTIONS, variable.REFINE_OPTION)
             super().savePoseAccuracy(res, gt_img, cam_p6l[0])
 
 
@@ -137,8 +139,8 @@ class PPL(Master):
             #     Recontest.recontestPTidx(self.points_3D_recon,self.ind_to_id_recon,self.pts_3d_query)
             #     Recontest.compareLPtestPPLbase(self.points_3D_recon,self.lines_3D_recon)
         if estimator=='TPF':
-            Recontest.recontestPTidx(self.points_3D_recon,self.ind_to_id_recon,self.pts_3d_query)
-            Recontest.compareLPtestPPLbase(self.points_3D_recon,self.lines_3D_recon)
+            recontest.recontestPTidx(self.points_3D_recon,self.ind_to_id_recon,self.pts_3d_query)
+            recontest.compareLPtestPPLbase(self.points_3D_recon,self.lines_3D_recon)
 
     def test(self,recover,esttype):
         # Check line point match

@@ -5,7 +5,7 @@ from scipy.signal import find_peaks
 from scipy import stats
 import heapq
 import torch
-import static.Variable as VAR
+import static.variable as VAR
 
 device = torch.device(VAR.CUDA)
 

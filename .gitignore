@@ -2,23 +2,19 @@
 *.Identifier
 *.pyc
 
-eigen-3.4.0/
-eigeb-3.4.0.tar.gz
-Nas/
-output/energy/*
-# !output/energy/apt1_living/
-output/cambridge/
+# results, output, pretrained_model
+output/
 utils/invsfm/wts/
 utils/invsfm/tf2torch/layer_data/
-rebuttal/temporary_dataset/
+result/
+
+# Poselib setting
 PoseLib/*
 !PoseLib/PoseLib/
 !PoseLib/CMakeLists.txt
 # !PoseLib/pybind/*
 !PoseLib/pybind/pyposelib.cpp
-/rebuttal/output/*txt
-/rebuttal/output/txt/
-/dataset
-result/ECDF/
-result/Curve/
-result/Curved/
+
+# eigen
+eigen-3.4.0/
+eigeb-3.4.0.tar.gz/
