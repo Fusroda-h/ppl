@@ -1,6 +1,7 @@
 *.db
 *.Identifier
 *.pyc
+.vscode/
 
 # results, output, pretrained_model
 output/
@@ -12,8 +13,8 @@ result/
 PoseLib/*
 !PoseLib/PoseLib/
 !PoseLib/CMakeLists.txt
-# !PoseLib/pybind/*
-!PoseLib/pybind/pyposelib.cpp
+!PoseLib/pybind/*
+# !PoseLib/pybind/pyposelib.cpp
 
 # eigen
 eigen-3.4.0/
