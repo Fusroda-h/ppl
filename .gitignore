@@ -13,7 +13,6 @@ result/
 PoseLib/*
 !PoseLib/PoseLib/
 !PoseLib/CMakeLists.txt
-!PoseLib/pybind/*
 !PoseLib/pybind/pyposelib.cpp
 
 # eigen

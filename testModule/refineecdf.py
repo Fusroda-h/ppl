@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath("."))
 
 from static import graph_var
 from static import variable
-from domain.loader.ResultObject import ResultObject
+from domain.loader.result_obj import ResultObject
 
 def rfcheck_drawPoseAccuracyCDF(pose_result_obj_lst, output_path):
     for errtype in graph_var.ERROR_TYPE:

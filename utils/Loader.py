@@ -7,7 +7,7 @@ cur_dir = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.abspath("."))
 
 from static import PoseCDFVAR
-from domain.loader.TXTLoader import PoseAccuracyLoader
+from domain.loader.output_obj import PoseAccuracyLoader
 
 
 def loadPoseAccuracyResult():

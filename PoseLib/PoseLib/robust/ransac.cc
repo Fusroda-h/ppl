@@ -174,13 +174,11 @@ RansacStats ransac_p6l_relpose(const std::vector<Eigen::Vector2d> &points2D,
     p6lGeneralizedRelativePoseEstimator estimator(opt, points2D, points3D, lines3D);
 
     // For debugging refinement, uncomment below line & modify ransac_impl.h
-    // RansacStats stats = ransac<p6lGeneralizedRelativePoseEstimator>(estimator, opt, best_model, runRefine);
     RansacStats stats = ransac<p6lGeneralizedRelativePoseEstimator>(estimator, opt, best_model, runRefine);
 
-    // #TODO get Inlier
-    best_inliers->resize(points2D.size());
-
     // Compute inliers
+    best_inliers->resize(points2D.size());
+    
     std::vector<char> &inliers = (*best_inliers);
 
     CameraPose relpose;
@@ -188,7 +186,6 @@ RansacStats ransac_p6l_relpose(const std::vector<Eigen::Vector2d> &points2D,
     relpose.t = best_model->t;
 
     get_inliers(relpose, points2D, points3D, lines3D, (opt.max_epipolar_error * opt.max_epipolar_error), &inliers);
-    // std::cout << "Total pts: " << points2D.size() << " ||  Inliers : " << get_inliers(relpose, points2D, points3D, lines3D, (opt.max_epipolar_error * opt.max_epipolar_error), &inliers) << std::endl;
     
     return stats;
 }

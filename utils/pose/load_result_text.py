@@ -8,8 +8,7 @@ sys.path.append(os.path.abspath("."))
 
 from static import variable
 from static import graph_var
-from domain.loader.ResultObject import ResultObject
-
+from domain.loader.result_obj import ResultObject
 
 def load_result_obj(_pose, _recover, _quality):
     result_obj = []

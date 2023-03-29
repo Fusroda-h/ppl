@@ -41,8 +41,6 @@ template <typename Solver, typename Model=CameraPose>
 RansacStats ransac(Solver &estimator, const RansacOptions &opt, Model *best_model, int runRefine=0) {
     RansacStats stats;
 
-    // std::cout << "Refine option " << runRefine << std::endl;
-
     if (estimator.num_data < estimator.sample_sz) {
         return stats;
     }
