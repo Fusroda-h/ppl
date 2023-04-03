@@ -38,7 +38,6 @@ curdir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(curdir)
 from methods import *
 
-################################################################################
 def invsfm(inputfiles,src_path,recon_pts_path,eval_path,params):
     input_attr, scale_size, crop_size, sample_size, device = params
 

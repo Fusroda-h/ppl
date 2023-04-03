@@ -5,7 +5,7 @@ from collections import defaultdict
 import numpy as np
 import pandas as pd
 
-from static import variable
+from static import variable as VAR
 
 import testModule.linecloud as lineCloudTest
 import testModule.recontest as recontest
@@ -18,7 +18,7 @@ from utils.pose import line
 from utils.l2precon import save
 from utils.l2precon import calculate
 from utils.invsfm import reconstruction
-from utils.removeOutliers import remove_outliers
+from utils.remove_outliers import remove_outliers
 
 from domain import *
 
@@ -37,9 +37,9 @@ class Master(metaclass=ABCMeta):
     def __init__(self, cur_dir, dataset):
         self.dataset = dataset
         self.curdir = cur_dir
-        dataset_path = os.path.join(cur_dir, variable.DATASET_MOUNT, variable.getDatasetName(self.dataset), self.dataset)
+        dataset_path = os.path.join(cur_dir, VAR.DATASET_MOUNT, VAR.getDatasetName(self.dataset), self.dataset)
         self.basepath = dataset_path
-        self.output_path = os.path.join(cur_dir, "output", variable.getDatasetName(self.dataset), self.dataset)
+        self.output_path = os.path.join(cur_dir, "output", VAR.getDatasetName(self.dataset), self.dataset)
 
         self.pts_2d_query = read_images_text(os.path.join(dataset_path, "sparse_queryadded", "images.txt"))
         self.pts_3d_query = read_points3D_text(os.path.join(dataset_path, "sparse_queryadded","points3D.txt"))
@@ -49,13 +49,11 @@ class Master(metaclass=ABCMeta):
 
         query_txt_path = os.path.join(dataset_path, "query_imgs.txt")
         
-        ##############################
-        # self.pts_3d_query, self.pts_2d_query = remove_outliers(self.pts_3d_query,self.pts_2d_query, Variable.THR_OUT_NN,Variable.THR_OUT_STD)
-        ##############################
+        self.pts_3d_query, self.pts_2d_query = remove_outliers(self.pts_3d_query,self.pts_2d_query, VAR.THR_OUT_NN,VAR.THR_OUT_STD)
         
         self.queryNames, self.queryIds = pe.get_query_images(query_txt_path, self.pts_2d_query)
 
-        self.scale = variable.getScale(self.dataset)
+        self.scale = VAR.getScale(self.dataset)
         self.files = []
         self.checkedfiles = []
             
@@ -147,7 +145,7 @@ class Master(metaclass=ABCMeta):
     """
     @abstractmethod
     def savePose(self, sparsity_level, noise_level):
-        if variable.REFINE_OPTION:
+        if VAR.REFINE_OPTION:
             pose_output_path = os.path.join(self.output_path, "PoseAccuracy","refined")
         else:    
             pose_output_path = os.path.join(self.output_path, "PoseAccuracy","notrefined")
@@ -200,7 +198,7 @@ class Master(metaclass=ABCMeta):
         pose_output_path = os.path.join(self.output_path, "PoseAccuracy")
 
         n_query = len(self.queryIds)
-        sparisty_noise_level_variations = len(variable.SPARSITY_LEVEL) * len(variable.NOISE_LEVEL)
+        sparisty_noise_level_variations = len(VAR.SPARSITY_LEVEL) * len(VAR.NOISE_LEVEL)
 
         csv_result = np.zeros((n_query, 5 * sparisty_noise_level_variations), dtype=object)
         for _j in range(sparisty_noise_level_variations):
@@ -213,10 +211,10 @@ class Master(metaclass=ABCMeta):
                 csv_result[_i][_j*5+4] = sec
 
         csv_columns = []
-        for _i in range(len(variable.SPARSITY_LEVEL)):
-            for _j in range(len(variable.NOISE_LEVEL)):
-                _sl = variable.SPARSITY_LEVEL[_i]
-                _nl = variable.NOISE_LEVEL[_j]
+        for _i in range(len(VAR.SPARSITY_LEVEL)):
+            for _j in range(len(VAR.NOISE_LEVEL)):
+                _sl = VAR.SPARSITY_LEVEL[_i]
+                _nl = VAR.NOISE_LEVEL[_j]
                 csv_columns.append("Sparsity: " + str(_sl) + " Noise : " + str(_nl) + " qvec")
                 csv_columns += ["tvec", "error_r", "error_t", "time"]
 
@@ -369,13 +367,10 @@ class Master(metaclass=ABCMeta):
         self.points_3D_recon.extend([pts_A, pts_B])
         print("Total recon line",len(self.lines_3D_recon))
         
-        swap_level = variable.SWAP_RATIO
-        ref_iter = variable.REFINE_ITER
+        swap_level = VAR.SWAP_RATIO
+        ref_iter = VAR.REFINE_ITER
         
         if estimator=='SPF':
-            # No swap
-            # est, self.ind_to_id_recon, self.id_to_ind_recon = calculate.coarse_est_spf_harsh(self.points_3D_recon, self.lines_3D_recon, self.ind_to_id_recon, swap_level)
-            # ests_pts = calculate.refine_est_spf(self.points_3D_recon[0], self.lines_3D_recon, est, ref_iter)
             est = calculate.coarse_est_spf(self.points_3D_recon[0], self.lines_3D_recon)
             ests_pts, self.ind_to_id_recon, self.id_to_ind_recon = calculate.refine_est_spf_harsh(self.points_3D_recon, self.lines_3D_recon, self.ind_to_id_recon, swap_level, est, ref_iter)
         if estimator=='TPF':
@@ -413,9 +408,9 @@ class Master(metaclass=ABCMeta):
     def reconImg(self,device):
         # Recover scene images from reconstructed 3D point cloud
         print("Inversion process starts.")
-        self.output_path = os.path.join(self.curdir, "output", variable.getDatasetName(self.dataset), self.dataset)
+        self.output_path = os.path.join(self.curdir, "output", VAR.getDatasetName(self.dataset), self.dataset)
         recon_path = os.path.join(self.output_path,"L2Precon")
         inv_q_path = os.path.join(self.output_path,"Quality")
 
-        vars = [variable.INPUT_ATTR,variable.SCALE_SIZE,variable.CROP_SIZE,variable.SAMPLE_SIZE,device]
+        vars = [VAR.INPUT_ATTR,VAR.SCALE_SIZE,VAR.CROP_SIZE,VAR.SAMPLE_SIZE,device]
         reconstruction.invsfm(self.checkedfiles,self.basepath,recon_path,inv_q_path,vars)
