@@ -84,8 +84,6 @@ class PointCloud(Master):
             cam_p3p = pe.convert_cam(self.camera_dict_gt[cam_id])
 
             res = poselib.estimate_absolute_pose(self._x1, self._p2, cam_p3p, variable.RANSAC_OPTIONS, variable.BUNDLE_OPTIONS,variable.REFINE_OPTION)
-            np.savetxt("new_test_p2",self._p2)
-            np.savetxt("new_test_x1",self._x1)
             super().savePoseAccuracy(res, gt_img, cam_p3p)
 
     
