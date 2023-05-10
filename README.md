@@ -8,10 +8,7 @@
 https://github.com/Fusroda-h/ppl/assets/64474003/78b7ecb5-717e-44a6-96fb-aed6cb8a4a59
 
 
-
 https://github.com/Fusroda-h/ppl/assets/64474003/167f1f00-7989-45a5-9f2f-896387ccde82
-
-
 
 
 https://github.com/Fusroda-h/ppl/assets/64474003/aad1fc65-5f88-4930-a73a-2234cf09e7fc
@@ -42,7 +39,7 @@ Code
 [Summarize your findings and discuss their implications for future research.]
 
 ```bibtex
-@inproceedings{hong17, 
+@inproceedings{lee2023ppl, 
     author = {Chunghwan Lee, Jaihoon Kim, Chanhyuk Yun, Je Hyeong Hong}, 
     booktitle = {2023 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, 
     title = {Paired-Point Lifting for Enhanced Privacy-Preserving Visual Localization}, 
