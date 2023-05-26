@@ -48,7 +48,8 @@ Code
 }
 ```
 ## License
-Paired-point lifting (PPL) is licensed under the MIT license.
+Paired-point lifting (PPL) algorithm has been patented and is in the process of registration.
+Paired-point lifting (PPL) is licensed under the CC0-1.0 license.
 [PoseLib](https://github.com/vlarsson/PoseLib) is licensed under the BSD 3-Clause license.
 
 ## Acknowledgement
