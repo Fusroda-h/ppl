@@ -16,6 +16,7 @@ utils/invsfm/tf2torch/layer_data/
 PoseLib/*
 !PoseLib/PoseLib/
 !PoseLib/CMakeLists.txt
+PoseLib/pybind/*
 !PoseLib/pybind/pyposelib.cpp
 
 # Eigen
