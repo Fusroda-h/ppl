@@ -22,7 +22,7 @@ https://github.com/Fusroda-h/ppl/assets/64474003/aad1fc65-5f88-4930-a73a-2234cf0
 
 We utilized two datasets [Learning to navigate the energy landscape](https://graphics.stanford.edu/projects/reloc/) and [Cambridge Landmarks](https://www.repository.cam.ac.uk/items/53788265-cb98-42ee-b85b-7a0cbc8eddb3), which we denoted as \emph{Energy landscape} and \emph{Cambridge} in the paper.
 
-## How to run our code
+## :running: How to run our code!
 
 - Environment setting
 Make a new folder `/Myfolder`.
