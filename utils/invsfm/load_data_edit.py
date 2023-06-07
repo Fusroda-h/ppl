@@ -33,7 +33,7 @@ curdir = os.path.dirname(os.path.abspath(__file__))
 
 sys.path.append(curdir)
 sys.path.append(os.path.dirname(curdir))
-import database
+from utils.database import database
 import read_write_model as read_model
 ################################################################################
 # Load sfm model directly from colmap output files 

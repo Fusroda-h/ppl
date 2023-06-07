@@ -55,8 +55,6 @@ BundleStats lm_impl(Problem &problem, Param *parameters, const BundleOptions &op
     Eigen::Matrix<double, n_params, n_params> JtJ;
     Eigen::Matrix<double, n_params, 1> Jtr;
 
-    // std::cout << "ba running"  << std::endl;
-
     // Initialize
     BundleStats stats;
     stats.cost = problem.residual(*parameters);
@@ -94,8 +92,6 @@ BundleStats lm_impl(Problem &problem, Param *parameters, const BundleOptions &op
         Param parameters_new = problem.step(sol, *parameters);
 
         double cost_new = problem.residual(parameters_new);
-
-        // std::cout << "New cost : " << cost_new << "  || Prev cost : " << stats.cost << std::endl;
 
         if (cost_new < stats.cost) {
             *parameters = parameters_new;

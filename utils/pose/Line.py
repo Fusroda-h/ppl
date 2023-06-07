@@ -38,7 +38,7 @@ def drawlines_olc(pts,ids):
     
     return [pts], lines, ind_to_id, id_to_ind
 
-def drawlines_tp_two_sets(pts,pre_ind):
+def drawlines_tp_two_sets(pts,pre_ind): # lines from two peaks (PPL)
     if len(pts)%2==0:
         pass
     else:

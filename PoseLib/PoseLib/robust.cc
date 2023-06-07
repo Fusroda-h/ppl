@@ -429,8 +429,6 @@ RansacStats estimate_p6l_relative_pose(const std::vector<Eigen::Vector2d> &point
                 lines3D_inliers.push_back(lines3D[pt_k]);
             }
 
-            // std::cout << "Total Points : " << points2D.size() << " |  Final Refine Points "<< points2D_inliers.size() << std::endl;
-
             refine_p6l_relpose(points2D_inliers, points3D_inliers, lines3D_inliers, relative_pose, ransac_opt_scaled, scaled_bundle_opt);
         }
     }

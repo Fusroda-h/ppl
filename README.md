@@ -24,9 +24,23 @@ https://github.com/Fusroda-h/ppl/assets/64474003/aad1fc65-5f88-4930-a73a-2234cf0
 
 ![Fancy Figure](/path/to/image.jpg)
 
+Download `eigen-3.4.0.tar.gz` library from https://eigen.tuxfamily.org/index.php?title=Main_Page to run poselib.
+Make a docker container that fits your environment with a python version 3.9.
+
+To properly build `poselib`, download the rest of the folders from the [PoseLib]{https://github.com/vlarsson/PoseLib}.
+We only uploaded the customized code from PoseLib implementing P6L solver.
+
+Since InvSfM code by Pittaluga et al. is written in tensorflow.v1, Chanhyuk Yun rewritten the whole code to pytorch for the ease of use ([invsfm_torch]{https://github.com/ChanhyukYun/invSfM_torch}).
+Download pretrained weights from [InvSfM]{https://github.com/francescopittaluga/invsfm}.
+Position the `wts` folder to `utils/invsfm/wts`.
+Then, our code will automatically change the weights to torch version and utilize it.
+
+```bash
+bash start.sh
 ```
-Code
-```
+The codes `database.py` and `read_write_model.py` is from [COLMAP]{https://github.com/colmap/colmap}.
+
+
 
 ## Results
 

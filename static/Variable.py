@@ -1,5 +1,3 @@
-import poselib
-import pandas as pd
 import os
 from utils.invsfm.methods import get_query_image_names
 
@@ -9,8 +7,8 @@ DATASET_MOUNT = "dataset"
 CUDA = 'cpu'
 
 # SPARSITY LEVEL should have at least one value for any process to run
-# SPARSITY_LEVEL = [1.0] # No feature image
-SPARSITY_LEVEL = [1.0, 0.5, 0.25, 0.1, 0.05] # for all data
+SPARSITY_LEVEL = [0.05]
+# SPARSITY_LEVEL = [1.0, 0.5, 0.25, 0.1, 0.05]
 # NOISE LEVEL should have at least one value for any process to run
 NOISE_LEVEL = [0.0]
 
@@ -26,7 +24,7 @@ THR_PLANE = 30
 THR_ANGLE = 20
 
 ##################################################
-############### Outlier Threshold ################
+############ Outlier removal threshold ###########
 ##################################################
 # nb_neighbors, which specifies how many neighbors are taken into account 
 # in order to calculate the average distance for a given point.

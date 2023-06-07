@@ -195,7 +195,7 @@ void GeneralizedRelativePoseEstimator::refine_model(CameraPose *pose) const {
 
 void p6lGeneralizedRelativePoseEstimator::generate_models(std::vector<CameraPose> *models) {
 
-    draw_sample(6, points2D.size(), &sample, rng); // 6개의 포인트 추출
+    draw_sample(6, points2D.size(), &sample, rng); // Select 6 points
 
     for (size_t k = 0; k < 6; ++k) {
         x1s[k] = points2D[sample[k]].homogeneous().normalized(); 
@@ -205,7 +205,7 @@ void p6lGeneralizedRelativePoseEstimator::generate_models(std::vector<CameraPose
         x2s[k] = lines3D[sample[k]];
     }
     
-    gen_relpose_6pt(p2s, x2s, p1s, x1s, models); //modified 0722 jhl
+    gen_relpose_6pt(p2s, x2s, p1s, x1s, models);
 }
 
 double p6lGeneralizedRelativePoseEstimator::score_model(const CameraPose &pose, size_t *inlier_count) const {
@@ -271,7 +271,7 @@ double p6lGeneralizedRelativePoseEstimator::score_model(const CameraPose &pose, 
         l(2) = lx(1, 0);
 
         c = (double)(points2D[match_k].homogeneous().normalized().transpose() * l) / (double)(sqrt(l(0)*l(0) + l(1)*l(1)) );
-        // c = (double)(points2D[match_k].homogeneous().transpose() * l) / (double)(sqrt(l(0)*l(0) + l(1)*l(1)) );
+
         if (c*c < sq_th) {
             (*inlier_count)++;
             cost += (c*c);
@@ -285,6 +285,7 @@ double p6lGeneralizedRelativePoseEstimator::score_model(const CameraPose &pose, 
 }
 
 
+
 void p6lGeneralizedRelativePoseEstimator::refine_model(CameraPose *pose) const {
     BundleOptions bundle_opt;
     bundle_opt.loss_type = BundleOptions::LossType::TRUNCATED;
@@ -295,70 +296,58 @@ void p6lGeneralizedRelativePoseEstimator::refine_model(CameraPose *pose) const {
     std::vector<Eigen::Vector3d> points3D_refine;
     std::vector<Eigen::Vector3d> lines3D_refine;
 
-    // Find approximate inliers and bundle over these with a truncated loss
-    std::vector<char> inliers;
-    int num_inl = get_inliers(relpose, points2D, points3D, lines3D, (opt.max_epipolar_error * opt.max_epipolar_error), &inliers);
-    points2D_inl.reserve(num_inl);
-    points3D_inl.reserve(num_inl);
-    lines3D_inl.reserve(num_inl);
+    double c = 0.0;
+    Eigen::Matrix<double, 4, 4> Lx;
+    Eigen::Matrix<double, 3, 3> lx;
+    Eigen::Matrix<double, 3, 4> P;
+    Eigen::Vector3d l;
+    Eigen::Vector3d w;
 
-    if (num_inl <= 6) {
-        return;
-    }
-
+    double sq_th = opt.max_epipolar_error * opt.max_epipolar_error;
     for (size_t match_k = 0; match_k < points2D.size(); ++match_k) {
-        if (inliers[match_k]) {
+        Eigen::Vector3d v = lines3D[match_k];
+        w << points3D[match_k].cross(lines3D[match_k]);
+
+        Lx(0, 0) = 0;
+        Lx(0, 1) = w(2);
+        Lx(0, 2) = -w(1);
+        Lx(0, 3) = -v(0);
+        
+        Lx(1, 0) = -w(2);
+        Lx(1, 1) = 0;
+        Lx(1, 2) = w(0);
+        Lx(1, 3) = -v(1);
+
+        Lx(2, 0) = w(1);
+        Lx(2, 1) = -w(0);
+        Lx(2, 2) = 0;
+        Lx(2, 3) = -v(2);
+
+        Lx(3, 0) = v(0);
+        Lx(3, 1) = v(1);
+        Lx(3, 2) = v(2);
+        Lx(3, 3) = 0;
+
+        P = pose -> Rt();
+
+        lx = P*Lx*P.transpose();
+
+        l(0) = lx(2, 1);
+        l(1) = lx(0, 2);
+        l(2) = lx(1, 0);
+
+        c = (double)(points2D[match_k].homogeneous().normalized().transpose() * l) / (double)(sqrt(l(0)*l(0) + l(1)*l(1)) );
+
+        if (c*c < sq_th) {
             points2D_refine.push_back(points2D[match_k]);
             points3D_refine.push_back(points3D[match_k]);
             lines3D_refine.push_back(lines3D[match_k]);
         }
+        else {
+            continue;
+        }
     }
-    
 
-    // double sq_th = opt.max_epipolar_error * opt.max_epipolar_error;
-    // for (size_t match_k = 0; match_k < points2D.size(); ++match_k) {
-    //     Eigen::Vector3d v = lines3D[match_k];
-    //     w << points3D[match_k].cross(lines3D[match_k]);
-
-    //     Lx(0, 0) = 0;
-    //     Lx(0, 1) = w(2);
-    //     Lx(0, 2) = -w(1);
-    //     Lx(0, 3) = -v(0);
-        
-    //     Lx(1, 0) = -w(2);
-    //     Lx(1, 1) = 0;
-    //     Lx(1, 2) = w(0);
-    //     Lx(1, 3) = -v(1);
-
-    //     Lx(2, 0) = w(1);
-    //     Lx(2, 1) = -w(0);
-    //     Lx(2, 2) = 0;
-    //     Lx(2, 3) = -v(2);
-
-    //     Lx(3, 0) = v(0);
-    //     Lx(3, 1) = v(1);
-    //     Lx(3, 2) = v(2);
-    //     Lx(3, 3) = 0;
-
-    //     P = pose -> Rt();
-
-    //     lx = P*Lx*P.transpose();
-
-    //     l(0) = lx(2, 1);
-    //     l(1) = lx(0, 2);
-    //     l(2) = lx(1, 0);
-
-    //     c = (double)(points2D[match_k].homogeneous().normalized().transpose() * l) / (double)(sqrt(l(0)*l(0) + l(1)*l(1)) );
-
-    //     if (c*c < sq_th) {
-    //         points2D_refine.push_back(points2D[match_k]);
-    //         points3D_refine.push_back(points3D[match_k]);
-    //         lines3D_refine.push_back(lines3D[match_k]);
-    //     }
-    //     else {
-    //         continue;
-    //     }
-    // }
     refine_p6l_relpose(points2D_refine, points3D_refine, lines3D_refine, pose, opt, bundle_opt);
 
 }

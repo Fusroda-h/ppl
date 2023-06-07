@@ -26,9 +26,9 @@ def parseArgument():
     parser = argparse.ArgumentParser(description='Process Colmap Localization & Recover Images.')
     parser.add_argument('-d', '--dataset', type=str,
                         help='Colmap dataset to run localization test. [gerrard_hall, graham_hall, person_hall, south_building]',
-                        default="apt1_living")
+                        default="gerrard_hall")
 
-    parser.add_argument('-e','--estimate', type = str2bool, default = False, help = 'estimate camera pose')
+    parser.add_argument('-e','--estimate', type = str2bool, default = True, help = 'estimate camera pose')
     parser.add_argument('-r','--recover', type = str2bool, default = True, help = 'recover images')
     parser.add_argument('-t','--test', type = str2bool, default = True, help = 'check the line, index consistency')
     parser.add_argument('-o','--onlyinv',type=str2bool,default=False, help = 'implement an inversion process only')
