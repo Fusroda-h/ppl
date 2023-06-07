@@ -7,7 +7,7 @@ import math
 import utils.pose.pose_estimation as pe
 import utils.pose.vector as vector
 from utils.pose import dataset
-from utils import read_write_model
+from utils.colmap import read_write_model
 from static import variable
 
 np.random.seed(variable.RANDOM_SEED)

@@ -1,7 +1,7 @@
 import os
 import sys
 from collections import defaultdict
-from utils import read_write_model
+from utils.colmap import read_write_model
 
 def write_colmap_points(fout_name, points3D, pts_est, if_use_pt, id_to_ind):
     points = write_colmap_points_one_pair(points3D, pts_est, if_use_pt, id_to_ind)

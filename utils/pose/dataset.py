@@ -1,5 +1,5 @@
 from static import variable
-from utils import read_write_model
+from utils.colmap import read_write_model
 import collections
 import os
 import sys

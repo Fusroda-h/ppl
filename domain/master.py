@@ -10,7 +10,7 @@ from static import variable as VAR
 import test_module.linecloud as lineCloudTest
 import test_module.recontest as recontest
 
-from utils.read_write_model import *
+from utils.colmap.read_write_model import *
 import utils.pose.pose_estimation as pe
 import utils.pose.vector as vector
 from utils.pose import dataset

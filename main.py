@@ -8,7 +8,7 @@ from domain.pplplus import PPLplus
 
 from static import variable
 
-from utils.read_write_model import *
+import utils.colmap.read_write_model as read_model
 
 cur_dir = os.path.abspath(os.path.dirname(__file__))
 

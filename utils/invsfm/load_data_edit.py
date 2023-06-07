@@ -23,6 +23,7 @@
 # load_data.py
 # Non-Tensorflow functions for loading invsfm data
 # Author: Francesco Pittaluga
+
 import os
 import sys
 import numpy as np
@@ -33,8 +34,8 @@ curdir = os.path.dirname(os.path.abspath(__file__))
 
 sys.path.append(curdir)
 sys.path.append(os.path.dirname(curdir))
-from utils.database import database
-import read_write_model as read_model
+from utils.colmap import database
+import utils.colmap.read_write_model as read_model
 ################################################################################
 # Load sfm model directly from colmap output files 
 ################################################################################

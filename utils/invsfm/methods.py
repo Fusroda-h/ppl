@@ -12,7 +12,7 @@ from utils.invsfm import models
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from utils import read_write_model as read_model
+import utils.colmap.read_write_model as read_model
 
 global device, start
 start = 0
