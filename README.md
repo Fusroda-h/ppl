@@ -20,7 +20,7 @@ https://github.com/Fusroda-h/ppl/assets/64474003/aad1fc65-5f88-4930-a73a-2234cf0
 
 ## :mag:Dataset
 
-We utilized two datasets [Learning to navigate the energy landscape](https://graphics.stanford.edu/projects/reloc/) and [Cambridge Landmarks](https://www.repository.cam.ac.uk/items/53788265-cb98-42ee-b85b-7a0cbc8eddb3), which we denoted as \emph{Energy landscape} and \emph{Cambridge} in the paper.
+We utilized two datasets [Learning to navigate the energy landscape](https://graphics.stanford.edu/projects/reloc/) and [Cambridge Landmarks](https://www.repository.cam.ac.uk/items/53788265-cb98-42ee-b85b-7a0cbc8eddb3), which we denoted as $\emph{Energy landscape}$ and $\emph{Cambridge}$ in the paper.
 
 ## :running: How to run our code!
 
