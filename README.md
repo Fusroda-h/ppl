@@ -39,17 +39,18 @@ Code
 [Summarize your findings and discuss their implications for future research.]
 
 ```bibtex
-@inproceedings{lee2023ppl, 
-    author = {Chunghwan Lee, Jaihoon Kim, Chanhyuk Yun, Je Hyeong Hong}, 
-    booktitle = {2023 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, 
-    title = {Paired-Point Lifting for Enhanced Privacy-Preserving Visual Localization}, 
-    year = {2023}, 
-    <!-- pages = {5939--5947}, 
-    doi = {10.1109/CVPR.2017.629}, 
-    ISSN = {1063-6919},  -->
-    month = {June}
+@inproceedings{lee2023paired,
+  title={Paired-Point Lifting for Enhanced Privacy-Preserving Visual Localization},
+  author={Lee, Chunghwan and Kim, Jaihoon and Yun, Chanhyuk and Hong, Je Hyeong},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={17266--17275},
+  year={2023}
 }
 ```
+## License
+Paired-point lifting (PPL) algorithm has been patented and is in the process of registration.
+Paired-point lifting (PPL) is licensed under the CC0-1.0 license.
+[PoseLib](https://github.com/vlarsson/PoseLib) is licensed under the BSD 3-Clause license.
 
 ## Acknowledgement
 
