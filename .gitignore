@@ -4,7 +4,7 @@
 .vscode/
 
 # Dataset sample
-sample/
+dataset/
 
 # Results, output, pretrained_model
 output/
