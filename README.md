@@ -44,9 +44,16 @@ Then, our code will automatically change the weights to torch version and utiliz
 ```bash
 bash start.sh
 ```
+If you have any problem in building the packages.
+Visit installation each page, s.t. [PoseLib]{https://github.com/vlarsson/PoseLib}, [Ceres-solver]{http://ceres-solver.org/installation.html}, [COLMAP]{https://colmap.github.io/install.html}.
+Ubuntu and CUDA version errors might occur.
+
 The codes `database.py` and `read_write_model.py` is from [COLMAP]{https://github.com/colmap/colmap}.
 
 
+```
+
+```
 
 ## Results
 
