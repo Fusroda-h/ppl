@@ -3,6 +3,8 @@
 
 **Authors:** Chunghwan Lee, Jaihoon Kim, Chanhyuk Yun, [Je Hyeong Hong](https://sites.google.com/view/hyvision)
 
+[[Paper](https://openaccess.thecvf.com/content/CVPR2023/papers/Lee_Paired-Point_Lifting_for_Enhanced_Privacy-Preserving_Visual_Localization_CVPR_2023_paper.pdf)][[Supplementary document](documents/Lee_et_al_cvpr23_supplemat.pdf)]
+
 ![Teaser](/path/to/image.jpg)
 
 https://github.com/Fusroda-h/ppl/assets/64474003/78b7ecb5-717e-44a6-96fb-aed6cb8a4a59
