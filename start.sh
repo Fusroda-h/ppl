@@ -15,7 +15,7 @@ cmake -DCMAKE_INSTALL_PREFIX=// ..
 make install
 
 # pip package install
-pip install pybind11 numpy opencv-python tqdm matplotlib scikit-learn scikit-image torch pandas
+pip install pybind11 numpy opencv-python tqdm matplotlib scikit-learn scikit-image torch pandas open3d
 apt-get install libgl1-mesa-glx -y
 
 # Build poselib

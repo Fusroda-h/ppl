@@ -18,12 +18,11 @@ https://github.com/Fusroda-h/ppl/assets/64474003/aad1fc65-5f88-4930-a73a-2234cf0
 
 ## :mag:Dataset
 
-[Provide a brief introduction to your research, including the background and context of your study, and explain why your research is important.]
+We utilized two datasets [Learning to navigate the energy landscape](https://graphics.stanford.edu/projects/reloc/) and [Cambridge Landmarks](https://www.repository.cam.ac.uk/items/53788265-cb98-42ee-b85b-7a0cbc8eddb3), which we denoted as \emph{Energy landscape} and \emph{Cambridge} in the paper.
 
-## How to run
+## How to run our code
 
-![Fancy Figure](/path/to/image.jpg)
-
+- Environment setting
 Make a new folder `/Myfolder`.
 Make a docker container that fits your environment with a python version 3.9.
 Mount the docker volume with the `-v /Myfolder/:/workspace/`.
@@ -33,11 +32,11 @@ Clone the git `git clone https://github.com/Fusroda-h/ppl`
 Download `eigen-3.4.0.tar.gz` library from https://eigen.tuxfamily.org/index.php?title=Main_Page to run poselib.
 
 
-To properly build `poselib`, download the rest of the folders from the [PoseLib]{https://github.com/vlarsson/PoseLib}.
+To properly build `poselib`, download the rest of the folders from the [PoseLib](https://github.com/vlarsson/PoseLib).
 We only uploaded the customized code from PoseLib implementing P6L solver.
 
-Since InvSfM code by Pittaluga et al. is written in tensorflow.v1, Chanhyuk Yun rewritten the whole code to pytorch for the ease of use ([invsfm_torch]{https://github.com/ChanhyukYun/invSfM_torch}).
-Download pretrained weights from [InvSfM]{https://github.com/francescopittaluga/invsfm}.
+Since InvSfM code by Pittaluga et al. is written in tensorflow.v1, Chanhyuk Yun rewritten the whole code to pytorch for the ease of use ([invsfm_torch](https://github.com/ChanhyukYun/invSfM_torch)).
+Download pretrained weights from [InvSfM](https://github.com/francescopittaluga/invsfm).
 Position the `wts` folder to `utils/invsfm/wts`.
 Then, our code will automatically change the weights to torch version and utilize it.
 
@@ -45,21 +44,40 @@ Then, our code will automatically change the weights to torch version and utiliz
 bash start.sh
 ```
 If you have any problem in building the packages.
-Visit installation each page, s.t. [PoseLib]{https://github.com/vlarsson/PoseLib}, [Ceres-solver]{http://ceres-solver.org/installation.html}, [COLMAP]{https://colmap.github.io/install.html}.
+Visit installation each page, s.t. [PoseLib](https://github.com/vlarsson/PoseLib), [Ceres-solver](http://ceres-solver.org/installation.html), [COLMAP](https://colmap.github.io/install.html).
 Ubuntu and CUDA version errors might occur.
 
-The codes `database.py` and `read_write_model.py` is from [COLMAP]{https://github.com/colmap/colmap}.
+The codes `database.py` and `read_write_model.py` is from [COLMAP](https://github.com/colmap/colmap).
 
+- Run the main code (pose estimation, recovering point, restoring image at once)
+
+You can download example dataset on [Sample_data](https://1drv.ms/u/s!AlaAkmWU9TVG6yIqNBD0PlN43Ewe?e=2gIN1F).
+Directories are organized like below.
+```bash
+├─Dataset_type (energy, cambridge)
+│  └─Scene (apt1_living, kingscolledge)
+│      ├─bundle_maponly
+│      ├─images_maponly
+│      ├─query
+│      ├─sparse_gt
+│      ├─sparse_maponly
+│      └─sparse_queryadded
+```
+The construction of map and queries are explained in [supplementary materials](documents/Lee_et_al_cvpr23_supplemat.pdf).
+
+To generate the PPL-based line cloud and to estimate pose & recover the point cloud from this
 
 ```
-
+/usr/local/bin/python main.py
 ```
 
-## Results
+You can change your options with the parser in `main.py`.
+Or else can manipulate the miute options with `static/variable.py`.
 
-[Describe your findings in detail, including any graphs or figures that help illustrate your results.]
+The results are stored in `output` folder.
+In the folder, recovered point clouds, pose errors, and recovered image qualities are stored in `Dataset_name/Scene/L2Precon`,`Dataset_name/Scene/PoseAccuracy`,`Dataset_name/Scene/Quality` respectively.
+The recovered images will be saved in `dataset/Dataset_name/Scene/invsfmIMG/`.
 
-![Fancy Figure](/path/to/image.jpg)
 
 ## Citation
 

@@ -390,7 +390,7 @@ class Master(metaclass=ABCMeta):
 
     @abstractmethod
     def test(self,recover,esttype):
-        lineCloudTest.lineIntegrityTest(self.line_to_pts, self.pts_to_line, self.line_3d, self.pts_3d_query)
+        lineCloudTest.line_integrity_test(self.line_to_pts, self.pts_to_line, self.line_3d, self.pts_3d_query)
         if recover:
             self.reconTest(esttype)
     
