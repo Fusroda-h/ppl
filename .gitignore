@@ -3,11 +3,14 @@
 *.pyc
 .vscode/
 
-# results, output, pretrained_model
+# Dataset sample
+sample/
+
+# Results, output, pretrained_model
 output/
+result/
 utils/invsfm/wts/
 utils/invsfm/tf2torch/layer_data/
-result/
 
 # Poselib setting
 PoseLib/*
@@ -15,6 +18,6 @@ PoseLib/*
 !PoseLib/CMakeLists.txt
 !PoseLib/pybind/pyposelib.cpp
 
-# eigen
+# Eigen
 eigen-3.4.0/
 eigeb-3.4.0.tar.gz/

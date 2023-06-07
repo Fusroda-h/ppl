@@ -131,55 +131,14 @@ class PPLplus(Master):
         print("PPLplus recover image")
         super().recoverPPLbase(estimator, sparsity_level, noise_level)
 
-        # pts_A = []
-        # pts_B = []
-        # self.ind_to_id_recon = [{},{}]
-        # self.id_to_ind_recon = [{},{}]
-        # self.sparse_pts_3d_ids=[]
-        # self.points_3D_recon = []
-        # self.lines_3D_recon = []
-        # for i,_lk in enumerate(self.sparse_line_3d_ids):
-        #     _pts_3d_id1, _pts_3d_id2 = self.line_to_pts[_lk]
-        #     self.sparse_pts_3d_ids.extend([_pts_3d_id1,_pts_3d_id2])
-        #     self.lines_3D_recon.append(self.pts_to_line[_pts_3d_id1])
-        #     pts_A.append(self.pts_3d_query[_pts_3d_id1].xyz)
-        #     pts_B.append(self.pts_3d_query[_pts_3d_id2].xyz)
-        #     self.id_to_ind_recon[0][_pts_3d_id1] = i
-        #     self.ind_to_id_recon[0][i] = _pts_3d_id1
-        #     self.id_to_ind_recon[1][_pts_3d_id2] = i
-        #     self.ind_to_id_recon[1][i] = _pts_3d_id2
-        
-        # pts_A = np.array(pts_A)
-        # pts_B = np.array(pts_B)
-        # self.lines_3D_recon = np.array(self.lines_3D_recon)
-        
-        # self.points_3D_recon.extend([pts_A, pts_B])
-        # print("Total recon line",len(self.lines_3D_recon))
-        
-        # swap_level = Variable.SWAP_RATIO
-        # ref_iter = 0
-        
-        # if estimator=='SPF':
-        #     # No swap
-        #     est, self.ind_to_id_recon, self.id_to_ind_recon = calculate.coarse_est_spf_harsh(self.points_3D_recon, self.lines_3D_recon, self.ind_to_id_recon, swap_level)
-        #     ests_pts = calculate.refine_est_spf(self.points_3D_recon[0], self.lines_3D_recon, est, ref_iter)
-        # if estimator=='TPF':
-        #     ests_pts = calculate.coarse_est_tpf(self.points_3D_recon, self.lines_3D_recon, swap_level)    
-            
-        # info = [sparsity_level, noise_level, swap_level, estimator]
-        # super().saveReconpointswithswap(ests_pts,info)
-
     def reconTest(self,estimator):
         # Check recon index id match
         if estimator=='SPF':
             # TO DO
             pass
-            # for i in range(len(Variable.SWAP_RATIO)):
-            #     Recontest.recontestPTidx(self.points_3D_recon[0],self.ind_to_id_recon,self.pts_3d_query)
-            #     Recontest.compareLPtestPPLbase(self.points_3D_recon,self.lines_3D_recon)
         if estimator=='TPF':
-            recontest.recontestPTidx(self.points_3D_recon,self.ind_to_id_recon,self.pts_3d_query)
-            recontest.compareLPtestPPLbase(self.points_3D_recon,self.lines_3D_recon)
+            recontest.recontest_pt_idx(self.points_3D_recon,self.ind_to_id_recon,self.pts_3d_query)
+            recontest.compare_LPtest_PPLbase(self.points_3D_recon,self.lines_3D_recon)
     
     def test(self,recover,esttype):
         super().test(recover,esttype)

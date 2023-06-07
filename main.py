@@ -25,7 +25,7 @@ def str2bool(v):
 def parseArgument():
     parser = argparse.ArgumentParser(description='Process Colmap Localization & Recover Images.')
     parser.add_argument('-d', '--dataset', type=str,
-                        help='Colmap dataset to run localization test. [gerrald_hall, graham_hall, person_hall, south_building]',
+                        help='Colmap dataset to run localization test. [gerrard_hall, graham_hall, person_hall, south_building]',
                         default="apt1_living")
 
     parser.add_argument('-e','--estimate', type = str2bool, default = False, help = 'estimate camera pose')

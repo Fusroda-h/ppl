@@ -10,7 +10,6 @@ from PIL import Image
 import utils.invsfm.load_data_edit as ld
 from utils.invsfm.tf2torch import models
 
-
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from utils import read_write_model as read_model

@@ -51,11 +51,6 @@ class OLC(Master):
             self.pts_to_line[k] = self.line_3d[i]
             self.line_to_pts[i] = k
         
-        # for i, k in enumerate(self.id_to_ind[0].keys()):
-        #     self.pts_to_line[k] = self.line_3d[i]
-        #     self.line_to_pts[i] = k
-
-
     def maskSparsity(self, sparisty_level):
         new_shape = int(len(self.pts_3d_ids) * sparisty_level)
         self.sparse_line_3d_ids = set(self.pts_3d_ids[:new_shape])        
@@ -72,7 +67,7 @@ class OLC(Master):
         for _i, k in enumerate(connected_pts3d_ids):
             pts_to_ind[k] = _i
             if self.pts_3d_query[k].xyz[0] != p2[_i][0]:
-                raise Exception("Point to Index Match Error ", k)
+                raise Exception("Point to Index Match Error", k)
         
         self.valid_pts_3d_ids = self.sparse_line_3d_ids.intersection(set(connected_pts3d_ids))
         
@@ -154,7 +149,7 @@ class OLC(Master):
     
     def reconTest(self,estimator):
         #reconTest
-        recontest.recontestPTidx([self.points_3D_recon],[self.ind_to_id_recon],self.pts_3d_query)
+        recontest.recontest_pt_idx([self.points_3D_recon],[self.ind_to_id_recon],self.pts_3d_query)
         
     def test(self,recover,esttype):
         # recon test

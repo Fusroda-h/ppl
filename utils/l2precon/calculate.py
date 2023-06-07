@@ -63,7 +63,7 @@ def coarse_est_spf_harsh(points3d,lines,ind_to_ids,swap_levels):
         swapped_ind_id2.append(new_ind_id2)
         swapped_id_ind2.append(new_id_ind2)
     
-    # TODO error w.r.t swapped points
+    # TODO print errors w.r.t swapped points
     # errs_a = np.linalg.norm(np.subtract(pts_est1,pts),axis=1)
     # errs_b = np.linalg.norm(np.subtract(pts_est2,pts2),axis=1)
     
@@ -275,7 +275,7 @@ def refine_est_spf_harsh(points3d,lines,ind_to_ids,swap_levels,est_peak,iter_num
             set_l2p = set(nn_l2p[i, :])
             set_intersection = set_p2l.intersection(set_l2p)
 
-            if len(set_intersection) > 10:  # Threshld can be changed as well. A distance metric combining both l2p and p2l can also be defined.
+            if len(set_intersection) > 10:  # Threshlod can be changed as well. A distance metric combining both l2p and p2l can also be defined.
                 nns[i] = np.array(list(set_intersection), dtype=np.int32)
             else:
                 nns[i] = nn_l2p[i, :]
@@ -311,7 +311,7 @@ def refine_est_spf_harsh(points3d,lines,ind_to_ids,swap_levels,est_peak,iter_num
         swapped_ind_id2.append(new_ind_id2)
         swapped_id_ind2.append(new_id_ind2)
     
-    # TODO error w.r.t swapped points
+    # TODO print errors w.r.t swapped points
     # errs_a = np.linalg.norm(np.subtract(pts_est1,pts),axis=1)
     # errs_b = np.linalg.norm(np.subtract(pts_est2,pts2),axis=1)
     
@@ -449,31 +449,6 @@ def get_peak_kde(estimates, gt_beta, X_MAX, drawGraph, num_bins=500, nro=5):
         _a, _b = _b, _a
     
     norm_coeff = np.max(counts)/(np.max(K) +1e-7) # modified 10.30. jhl
-
-    if drawGraph:
-        print()
-        print("Error", abs(gt_beta - _b) + abs(_a))
-
-        # kde 
-        plt.plot(x_axis, K*norm_coeff, color="r", label='kde')
-
-        # histogram
-        plt.stairs(counts, bins)
-
-        # Local maximas
-        plt.plot(x_axis[peaks], K[peaks]*norm_coeff, "x", label='Local Maximas')
-
-        # Estimated two highest peaks
-        # plt.plot(x_axis[peaks[idx]], K[peaks[idx]]*norm_coeff, "o", color="b", label='Estimated Peaks')
-        plt.plot(_a, kde_estimator([_a])*norm_coeff, "o", color="b", label='Estimated Peaks A')
-        plt.plot(_b, kde_estimator([_b])*norm_coeff, "o", color="yellow", label='Estimated Peaks B')
-
-        # GT peaks
-        plt.axvline(x = 0, color = 'g', linestyle="dotted", label='GT Beta')
-        plt.axvline(x = gt_beta, color = 'g', linestyle="dotted")
-
-        plt.legend(loc='lower right')
-        plt.show()
    
     return _a, _b
 

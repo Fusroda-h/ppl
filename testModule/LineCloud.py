@@ -1,6 +1,6 @@
 import numpy as np
 
-def lineIntegrityTest(line_to_pts, pts_to_line, line_3d, pts_3d_query):
+def line_integrity_test(line_to_pts, pts_to_line, line_3d, pts_3d_query):
     print("Line Integrity Test Module Initiated")
     for k, v in line_to_pts.items():
         p1, p2 = v

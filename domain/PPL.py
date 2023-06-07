@@ -133,14 +133,10 @@ class PPL(Master):
     def reconTest(self,estimator):
         # Check recon index id match
         if estimator=='SPF':
-            # TO DO
             pass
-            # for i in range(len(Variable.SWAP_RATIO)):
-            #     Recontest.recontestPTidx(self.points_3D_recon,self.ind_to_id_recon,self.pts_3d_query)
-            #     Recontest.compareLPtestPPLbase(self.points_3D_recon,self.lines_3D_recon)
         if estimator=='TPF':
-            recontest.recontestPTidx(self.points_3D_recon,self.ind_to_id_recon,self.pts_3d_query)
-            recontest.compareLPtestPPLbase(self.points_3D_recon,self.lines_3D_recon)
+            recontest.recontest_pt_idx(self.points_3D_recon,self.ind_to_id_recon,self.pts_3d_query)
+            recontest.compare_LPtest_PPLbase(self.points_3D_recon,self.lines_3D_recon)
 
     def test(self,recover,esttype):
         # Check line point match
