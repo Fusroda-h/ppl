@@ -7,8 +7,8 @@ import pandas as pd
 
 from static import variable as VAR
 
-import testModule.linecloud as lineCloudTest
-import testModule.recontest as recontest
+import test_module.linecloud as lineCloudTest
+import test_module.recontest as recontest
 
 from utils.read_write_model import *
 import utils.pose.pose_estimation as pe

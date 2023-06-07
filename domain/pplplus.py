@@ -5,8 +5,8 @@ import time
 import math
 from collections import defaultdict
 
-import testModule.linecloud as lineCloudTest
-import testModule.recontest as recontest
+import test_module.linecloud as lineCloudTest
+import test_module.recontest as recontest
 
 import utils.pose.pose_estimation as pe
 import utils.pose.vector as vector
