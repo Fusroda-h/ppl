@@ -80,7 +80,7 @@ def get_vec_from_nn_torch(pt,pts,num_nn):
     return vec
 
 def compare_normal_svd(lines,compare_rq):
-    s_nn_vec,num_nn_p2p,thre_ang = compare_rq
+    nn_vec,s_nn_vec,num_nn_p2p,thre_ang = compare_rq
     
     # cross over NN (must not include line)
     nn_normal_vec= np.cross(s_nn_vec, nn_vec) # shape : (num_pts//2, num_nn_p2p, 3)
@@ -97,12 +97,12 @@ def compare_normal_svd(lines,compare_rq):
     
     return idx_tp_onplane
 
-def test_in_plane(lines,s_nn_vec,num_nn_p2p,thre_ang):
+def test_in_plane(lines,nn_vec,s_nn_vec,num_nn_p2p,thre_ang):
         
     # Normalize vectors
     lines /= np.linalg.norm(lines,axis=1,keepdims=True)+1e-7 # already normalzied but to be sure
     
-    compare_rq = [s_nn_vec, num_nn_p2p,thre_ang]
+    compare_rq = [nn_vec,s_nn_vec, num_nn_p2p,thre_ang]
     ind_onplane = compare_normal_svd(lines, compare_rq)
     # onplane index랑 매칭 필요
     ind_not_onplane = np.setdiff1d(np.arange(len(lines)),ind_onplane)
@@ -167,7 +167,7 @@ def drawlines_tp_reject_plane(pts,THR_LOOP, THR_ANGLE):
     print("Compare normal vectors over NN by loop")
     while count<THR_LOOP:
         # find indx on plane
-        ind_half_onplane, ind_half_use = test_in_plane(test_lines,s_nn_vec[test_inds[0]],num_nn_p2p,THR_ANGLE) # max: num_pts//2
+        ind_half_onplane, ind_half_use = test_in_plane(test_lines,nn_vec[test_inds[0]],s_nn_vec[test_inds[0]],num_nn_p2p,THR_ANGLE) # max: num_pts//2
         
         pts_tp_use_a.append(test_ptss[0][ind_half_use])
         pts_tp_use_b.append(test_ptss[1][ind_half_use])
