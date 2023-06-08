@@ -96,9 +96,10 @@ The recovered images will be saved in `dataset/Dataset_name/Scene/invsfmIMG/`.
   year={2023}
 }
 ```
+
 ## License
 Paired-point lifting (PPL) algorithm has been patented and is in the process of registration.
-Paired-point lifting (PPL) is licensed under the CC0-1.0 license.
+Paired-point lifting (PPL) is licensed under the customized CC0-1.0 license with limitating commercial use.
 [PoseLib](https://github.com/vlarsson/PoseLib) is licensed under the BSD 3-Clause license.
 
 ## Acknowledgement
