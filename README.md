@@ -5,7 +5,7 @@
 
 **[[Paper](https://openaccess.thecvf.com/content/CVPR2023/papers/Lee_Paired-Point_Lifting_for_Enhanced_Privacy-Preserving_Visual_Localization_CVPR_2023_paper.pdf)][[Supplementary document](documents/Lee_et_al_cvpr23_supplemat.pdf)]**
 
-**Teaser videos for PPL**
+- **Teaser videos for PPL**
 
 https://github.com/Fusroda-h/ppl/assets/64474003/78b7ecb5-717e-44a6-96fb-aed6cb8a4a59
 
@@ -100,7 +100,5 @@ Paired-point lifting (PPL) is licensed under the CC0-1.0 license.
 [PoseLib](https://github.com/vlarsson/PoseLib) is licensed under the BSD 3-Clause license.
 
 ## Acknowledgement
-
-[List any references you cited in your paper here.]
 - This work was partly supported by the National Research Foundation of Korea(NRF) grants funded by the Korea government(MSIT), Institute of Information & communications Technology Planning & Evaluation (IITP) grant funded by the Korea government(MSIT) (Artificial Intelligence Graduate School Program(Hanyang University)) and Hanyang University.
 
