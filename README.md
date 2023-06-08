@@ -24,7 +24,7 @@ We utilized two datasets [Learning to navigate the energy landscape](https://gra
 
 ## :running: How to run our code!
 
-- Environment setting
+- **Environment setting**
 
 Make a new folder `/Myfolder`.
 Make a docker container that fits your environment with a python version 3.9.
@@ -53,7 +53,7 @@ Ubuntu and CUDA version errors might occur.
 
 The codes `database.py` and `read_write_model.py` is from [COLMAP](https://github.com/colmap/colmap).
 
-- Run the main code (pose estimation, recovering point, restoring image at once)
+- **Run the main code (pose estimation, recovering point, restoring image at once)**
 
 You can download example dataset on [Sample_data](https://1drv.ms/u/s!AlaAkmWU9TVG6yIqNBD0PlN43Ewe?e=2gIN1F).
 Directories are organized like below.
