@@ -25,6 +25,7 @@ We utilized two datasets [Learning to navigate the energy landscape](https://gra
 ## :running: How to run our code!
 
 - Environment setting
+
 Make a new folder `/Myfolder`.
 Make a docker container that fits your environment with a python version 3.9.
 Mount the docker volume with the `-v /Myfolder/:/workspace/`.
@@ -45,6 +46,7 @@ Then, our code will automatically change the weights to torch version and utiliz
 ```bash
 bash start.sh
 ```
+
 If you have any problem in building the packages.
 Visit installation each page, s.t. [PoseLib](https://github.com/vlarsson/PoseLib), [Ceres-solver](http://ceres-solver.org/installation.html), [COLMAP](https://colmap.github.io/install.html).
 Ubuntu and CUDA version errors might occur.
