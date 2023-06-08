@@ -65,8 +65,8 @@ def drawlines_ppl(pts3d,ids):
     
     return pts, lines, ind_to_id, id_to_ind
 
-def drawlines_pplplus(pts3d,ids,THR_LOOP=1000,THR_PLANE=30,THR_ANGLE=20):
-    pts, lines, pair_ind = drawlines_tp_reject_plane(pts3d,THR_LOOP, THR_PLANE, THR_ANGLE)
+def drawlines_pplplus(pts3d,ids,THR_LOOP=1000, THR_ANGLE=20):
+    pts, lines, pair_ind = drawlines_tp_reject_plane(pts3d,THR_LOOP, THR_ANGLE)
     
     ind_to_id, id_to_ind = id_ind_connect(pair_ind,ids)
 
@@ -104,7 +104,7 @@ def test_in_plane(lines,nn_vec,s_nn_vec,num_nn_p2p,thre_ang):
     
     compare_rq = [nn_vec,s_nn_vec, num_nn_p2p,thre_ang]
     ind_onplane = compare_normal_svd(lines, compare_rq)
-    # onplane index랑 매칭 필요
+    # onplane index matching
     ind_not_onplane = np.setdiff1d(np.arange(len(lines)),ind_onplane)
     
     return ind_onplane, ind_not_onplane
@@ -124,7 +124,7 @@ def list2array_append(pts_use,lines_use,ind_use):
     
     return pts_tp, lines_tp, ind_tp
 
-def drawlines_tp_reject_plane(pts,THR_LOOP, THR_ANGLE):
+def drawlines_tp_reject_plane(pts, THR_LOOP, THR_ANGLE):
     # To pair up normal vectors, mk whole nn vector sets
     if len(pts)%2==0:
         pass
@@ -145,7 +145,7 @@ def drawlines_tp_reject_plane(pts,THR_LOOP, THR_ANGLE):
     s_nn_vec = torch.from_numpy(s_nn_vec).to(device)
     for i in tqdm(range(num_pts)):
         nn_vec[i] = get_vec_from_nn_torch(pts[i],pts,num_nn_p2p) # (n, nn_p2p,3)
-        n_U, n_s, n_vt = np.linalg.svd(nn_vec[i]) # (num_nn_p2p, 3)
+        n_U, n_s, n_vt = torch.svd(nn_vec[i]) # (num_nn_p2p, 3)
         nn_normal = n_vt[0] # (3,)
         s_nn_vec[i] = nn_normal # if only fits for axis 2, values are duplicated and fill axis1
         
@@ -209,4 +209,3 @@ def drawlines_tp_reject_plane(pts,THR_LOOP, THR_ANGLE):
     print("Test index_a,b has no intersection :",all([True if i not in ind_tp_b else False for i in ind_tp_a]))
     
     return [pts_tp_a, pts_tp_b], lines_tp, [ind_tp_a, ind_tp_b]
-

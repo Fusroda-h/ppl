@@ -51,7 +51,7 @@ class PPLplus(Master):
         _pts_3d = np.array([v.xyz for v in self.pts_3d_query.values()])
         _pts_ids = np.array([k for k in self.pts_3d_query.keys()])
 
-        self.points_3D, self.line_3d, self.ind_to_id, self.id_to_ind = line.drawlines_pplplus(_pts_3d, _pts_ids, variable.THR_LOOP, variable.THR_PLANE, variable.THR_ANGLE)
+        self.points_3D, self.line_3d, self.ind_to_id, self.id_to_ind = line.drawlines_pplplus(_pts_3d, _pts_ids, variable.THR_LOOP, variable.THR_ANGLE)
         
         super().mapPointtoPPL()
 
