@@ -80,12 +80,7 @@ def get_vec_from_nn_torch(pt,pts,num_nn):
     return vec
 
 def compare_normal_svd(lines,compare_rq):
-    nn_vec,num_nn_p2p,thre_num,thre_ang = compare_rq
-    s_nn_vec = np.zeros((nn_vec.shape))  # (num_pts//2, num_nn_p2p, 3)
-    for i,nnv in enumerate(nn_vec):
-        n_U, n_s, n_vt = np.linalg.svd(nnv)
-        nn_normal = n_vt[0] # (3,)
-        s_nn_vec[i] = nn_normal # if only fits for axis 2, values are duplicated and fill axis1
+    s_nn_vec,num_nn_p2p,thre_ang = compare_rq
     
     # cross over NN (must not include line)
     nn_normal_vec= np.cross(s_nn_vec, nn_vec) # shape : (num_pts//2, num_nn_p2p, 3)
@@ -102,13 +97,12 @@ def compare_normal_svd(lines,compare_rq):
     
     return idx_tp_onplane
 
-def test_in_plane(lines,nn_vec,num_nn_p2p,thre_num,thre_ang):
+def test_in_plane(lines,s_nn_vec,num_nn_p2p,thre_ang):
         
     # Normalize vectors
-    nn_vec /= np.linalg.norm(nn_vec,axis=2,keepdims=True)+1e-7
     lines /= np.linalg.norm(lines,axis=1,keepdims=True)+1e-7 # already normalzied but to be sure
     
-    compare_rq = [nn_vec,num_nn_p2p,thre_num,thre_ang]
+    compare_rq = [s_nn_vec, num_nn_p2p,thre_ang]
     ind_onplane = compare_normal_svd(lines, compare_rq)
     # onplane index랑 매칭 필요
     ind_not_onplane = np.setdiff1d(np.arange(len(lines)),ind_onplane)
@@ -130,7 +124,7 @@ def list2array_append(pts_use,lines_use,ind_use):
     
     return pts_tp, lines_tp, ind_tp
 
-def drawlines_tp_reject_plane(pts,THR_LOOP, THR_PLANE, THR_ANGLE):
+def drawlines_tp_reject_plane(pts,THR_LOOP, THR_ANGLE):
     # To pair up normal vectors, mk whole nn vector sets
     if len(pts)%2==0:
         pass
@@ -141,14 +135,23 @@ def drawlines_tp_reject_plane(pts,THR_LOOP, THR_PLANE, THR_ANGLE):
     num_nn_p2p = int(min(num_pts*0.01,100))
     num_nn_p2p -= num_nn_p2p&1
     nn_vec = np.zeros((num_pts, num_nn_p2p, 3))
+    s_nn_vec = np.zeros((nn_vec.shape)) 
     print("Make Nearest Neighbor vector set")
+    # for i in tqdm(range(num_pts)):
+    #     nn_vec[i] = get_vec_from_nn(pts[i],pts,num_nn_p2p) # (n, nn_p2p,3)
     
     pts = torch.from_numpy(pts).to(device)
-    nn_vec = torch.from_numpy(nn_vec).to(device)
+    nn_vec = torch.from_numpy(nn_vec).to(device) 
+    s_nn_vec = torch.from_numpy(s_nn_vec).to(device)
     for i in tqdm(range(num_pts)):
         nn_vec[i] = get_vec_from_nn_torch(pts[i],pts,num_nn_p2p) # (n, nn_p2p,3)
+        n_U, n_s, n_vt = np.linalg.svd(nn_vec[i]) # (num_nn_p2p, 3)
+        nn_normal = n_vt[0] # (3,)
+        s_nn_vec[i] = nn_normal # if only fits for axis 2, values are duplicated and fill axis1
+        
     pts = pts.cpu().numpy()
     nn_vec = nn_vec.cpu().numpy()
+    s_nn_vec = s_nn_vec.cpu().numpy()
 
     pre_ind = np.arange(num_pts)
     # tp draw lines
@@ -164,8 +167,7 @@ def drawlines_tp_reject_plane(pts,THR_LOOP, THR_PLANE, THR_ANGLE):
     print("Compare normal vectors over NN by loop")
     while count<THR_LOOP:
         # find indx on plane
-        nn_vec_test = nn_vec[test_inds[0]]
-        ind_half_onplane, ind_half_use = test_in_plane(test_lines,nn_vec_test,num_nn_p2p,THR_PLANE,THR_ANGLE) # max: num_pts//2
+        ind_half_onplane, ind_half_use = test_in_plane(test_lines,s_nn_vec[test_inds[0]],num_nn_p2p,THR_ANGLE) # max: num_pts//2
         
         pts_tp_use_a.append(test_ptss[0][ind_half_use])
         pts_tp_use_b.append(test_ptss[1][ind_half_use])
@@ -207,5 +209,4 @@ def drawlines_tp_reject_plane(pts,THR_LOOP, THR_PLANE, THR_ANGLE):
     print("Test index_a,b has no intersection :",all([True if i not in ind_tp_b else False for i in ind_tp_a]))
     
     return [pts_tp_a, pts_tp_b], lines_tp, [ind_tp_a, ind_tp_b]
-
 
