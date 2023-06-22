@@ -88,7 +88,7 @@ The recovered images will be saved in `dataset/Dataset_name/Scene/invsfmIMG/`.
 [Summarize your findings and discuss their implications for future research.]
 
 ```bibtex
-@inproceedings{lee2023paired,
+@inproceedings{lee2023ppl,
   title={Paired-Point Lifting for Enhanced Privacy-Preserving Visual Localization},
   author={Lee, Chunghwan and Kim, Jaihoon and Yun, Chanhyuk and Hong, Je Hyeong},
   booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
