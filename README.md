@@ -35,10 +35,10 @@ Clone the git `git clone https://github.com/Fusroda-h/ppl`
 Download `eigen-3.4.0.tar.gz` library from https://eigen.tuxfamily.org/index.php?title=Main_Page to run poselib.
 
 (ex)
-`
+```bash
 cd ppl
 wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
-`
+```
 
 
 To properly build `poselib`, download the rest of the folders from the [PoseLib](https://github.com/vlarsson/PoseLib).
