@@ -47,11 +47,15 @@ ex)
 ```bash
 cd ..
 git clone https://github.com/PoseLib/PoseLib.git
+# Checkout to the version before refactoring "pybind"
+cd PoseLib
+git checkout 0b70bf0ae23a95e9d098d278562ebd8c6e59ae0d
 # Overwrite customized local poelib to cloned poslib
 # And move back to original directory
+cd ../
 cp -rf ppl/PoseLib/* PoseLib/
 rm -r ppl/PoseLib
-mv Poselib ppl/PoseLib
+mv PoseLib ppl/PoseLib
 ```
 
 Since InvSfM code by Pittaluga et al. is written in tensorflow.v1, Chanhyuk Yun rewritten the whole code to pytorch for the ease of use ([invsfm_torch](https://github.com/ChanhyukYun/invSfM_torch)).
@@ -60,6 +64,7 @@ Position the `wts` folder to `utils/invsfm/wts`.
 Then, our code will automatically change the weights to torch version and utilize it.
 
 ```bash
+cd ppl
 bash start.sh
 ```
 
