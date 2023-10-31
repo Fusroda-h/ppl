@@ -17,8 +17,8 @@ PoseLib/*
 !PoseLib/PoseLib/
 !PoseLib/CMakeLists.txt
 !PoseLib/pybind/
-PoseLib/pybind/*
-!PoseLib/pybind/pyposelib.cpp
+#PoseLib/pybind/*
+#!PoseLib/pybind/pyposelib.cpp
 
 # Eigen
 eigen-3.4.0/
