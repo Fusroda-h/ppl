@@ -68,14 +68,19 @@ cd ppl
 bash start.sh
 ```
 
-cf) If you suffer from an initialization error with the message `avx512fintrin.h:198:11: note: ‘__Y’ was declared here`
+cf) If you suffer from an initialization error with the message: `avx512fintrin.h:198:11: note: ‘__Y’ was declared here`.
+
 Refer to this [ISSUE](https://github.com/pytorch/pytorch/issues/77939#issue-1242584624) and install with GCC-11
+
 `apt-get install gcc-11 g++-11`
+
 Edit 'start.sh' so that Poselib is compiled with `gcc-11`.
+
 Substitute `cmake -S . -B _build/ -DPYTHON_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=_install`
 to `cmake -S . -B _build/ -DPYTHON_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=_install -DCMAKE_C_COMPILER=/usr/bin/gcc-11 -DCMAKE_CXX_COMPILER=/usr/bin/g++-11`.
 
-If you have any problem in building the packages.
+
+If you have other problems in building the packages.
 Visit installation each page, s.t. [PoseLib](https://github.com/vlarsson/PoseLib), [Ceres-solver](http://ceres-solver.org/installation.html), [COLMAP](https://colmap.github.io/install.html).
 Ubuntu and CUDA version errors might occur.
 
