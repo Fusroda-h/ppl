@@ -57,9 +57,8 @@ if [ -d "colmap" ]; then
 fi
 git clone -b 3.7 https://github.com/colmap/colmap.git
 cd colmap
-git checkout dev
-mkdir build
-cd build
+git checkout tags/3.7
+mkdir build && cd build
 cmake ..
 make -j
 make install
