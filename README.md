@@ -74,7 +74,7 @@ Refer to this [ISSUE](https://github.com/pytorch/pytorch/issues/77939#issue-1242
 
 `apt-get install gcc-11 g++-11`
 
-Edit the bash file `start.sh` so that Poselib is compiled with `gcc-11` --- substitute `cmake -S . -B _build/ -DPYTHON_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=_install`
+Edit the bash file `start.sh` so that Poselib is compiled with `gcc-11` $---$ substitute `cmake -S . -B _build/ -DPYTHON_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=_install`
 to `cmake -S . -B _build/ -DPYTHON_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=_install -DCMAKE_C_COMPILER=/usr/bin/gcc-11 -DCMAKE_CXX_COMPILER=/usr/bin/g++-11`.
 
 
