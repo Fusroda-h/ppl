@@ -50,7 +50,7 @@ git clone https://github.com/PoseLib/PoseLib.git
 # Checkout to the version before refactoring "pybind"
 cd PoseLib
 git checkout 0b70bf0ae23a95e9d098d278562ebd8c6e59ae0d
-# Overwrite customized local poelib to cloned poslib
+# Overwrite customized local poselib to cloned poselib
 # And move back to original directory
 cd ../
 cp -rf ppl/PoseLib/* PoseLib/
