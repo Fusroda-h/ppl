@@ -115,8 +115,10 @@ class PPLplus(Master):
             cam_id = gt_img.camera_id
             cam_p6l = [pe.convert_cam(self.camera_dict_gt[cam_id])]
 
-            res = poselib.estimate_p6l_relative_pose(self._x1, self._p2, self._x2, cam_p6l, cam_p6l, variable.RANSAC_OPTIONS, variable.BUNDLE_OPTIONS, variable.REFINE_OPTION)
-            super().savePoseAccuracy(res, gt_img, cam_p6l[0])
+            start = time.time()
+            res = poselib.estimate_p6l_relative_pose(self._x1, self._p2, self._x2, cam_p6l, cam_p6l, Variable.RANSAC_OPTIONS, Variable.BUNDLE_OPTIONS, Variable.REFINE_OPTION)
+            end = time.time()
+            super().savePoseAccuracy(res, gt_img, cam_p6l[0],end-start)
     
 
     def savePose(self, sparisty_level, noise_level):
