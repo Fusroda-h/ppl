@@ -83,8 +83,12 @@ class PointCloud(Master):
             cam_id = gt_img.camera_id
             cam_p3p = pe.convert_cam(self.camera_dict_gt[cam_id])
 
-            res = poselib.estimate_absolute_pose(self._x1, self._p2, cam_p3p, variable.RANSAC_OPTIONS, variable.BUNDLE_OPTIONS,variable.REFINE_OPTION)
-            super().savePoseAccuracy(res, gt_img, cam_p3p)
+            start = time.time()
+            res = poselib.estimate_absolute_pose(self._x1, self._p2, cam_p3p, Variable.RANSAC_OPTIONS, Variable.BUNDLE_OPTIONS,Variable.REFINE_OPTION)
+            end = time.time()
+            super().savePoseAccuracy(res, gt_img, cam_p3p, end-start)
+        else:
+            print("TOO sparse point cloud")
 
     
     def savePose(self, sparisty_level, noise_level):
