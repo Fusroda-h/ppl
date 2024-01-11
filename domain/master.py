@@ -125,14 +125,12 @@ class Master(metaclass=ABCMeta):
      @param {dict} GT cam dictionary.
      @param {string} output path.
     """
-    def savePoseAccuracy(self, res, gt, cam):
-        start = time.time()
+    def savePoseAccuracy(self, res, gt, cam, time):
         error_r, error_t = vector.calculate_loss(gt, res)
-        end = time.time()
         # Convert to Degree
         
         error_r = math.degrees(error_r)
-        self.resultPose.append([res[0].q, res[0].t, error_r, error_t, end-start])
+        self.resultPose.append([res[0].q, res[0].t, error_r, error_t, time])
 
 
     """
@@ -159,13 +157,24 @@ class Master(metaclass=ABCMeta):
         median_r_error = -1
         mean_t_error = -1
         median_t_error = -1
+        mean_time = -1
+        mean_iter = -1
         if self.resultPose:
-            r_error_lst = np.array([self.resultPose[i][2] for i in range(len(self.resultPose))])
-            t_error_lst = np.array([self.resultPose[i][3] for i in range(len(self.resultPose))])
+            r_error_lst=np.empty(len(self.resultPose))
+            t_error_lst=np.empty(len(self.resultPose))
+            time_lst=np.empty(len(self.resultPose))
+            iter_lst=np.empty(len(self.resultPose))
+            for i in range(len(self.resultPose)):
+                r_error_lst[i] = self.resultPose[i][2]
+                t_error_lst[i] = self.resultPose[i][3]
+                time_lst[i] = self.resultPose[i][4]
+                iter_lst[i] = self.resultPose[i][5]
             mean_r_error = np.mean(r_error_lst)
             median_r_error = np.median(r_error_lst)
             mean_t_error = np.mean(t_error_lst) * self.scale
             median_t_error = np.median(t_error_lst) * self.scale
+            mean_time = np.mean(time_lst)
+            mean_iter = np.mean(iter_lst)
         
         print(self.scale)
         print("Final Mean Error R",mean_r_error)
@@ -173,12 +182,14 @@ class Master(metaclass=ABCMeta):
         
         with open(os.path.join(pose_output_path, filename), "w") as f:
             f.write(f"R_Mean:{mean_r_error}, t_Mean:{mean_t_error}, R_Median:{median_r_error}, t_Meidan:{median_t_error} " + "\n")
+            f.write(f"Mean_time:{mean_time}"+"\n")
+            f.write(f"Mean_iteration:{mean_iter}"+"\n")
             f.write(f"Effective Queries: {len(self.resultPose)}/{len(self.queryIds)}" + "\n")
             f.write("qvec(4) tvec(3) error_r(1) error_t(1) time(1)" + "\n")
-            for q, t, e_r, e_t, sec in self.resultPose:
+            for q, t, e_r, e_t, sec, _iter in self.resultPose:
                 q = " ".join(list(map(str, (q.tolist())))) + " "
                 t = " ".join(list(map(str, (t.tolist())))) + " "
-                _r = " ".join(list(map(str, ([e_r, (e_t * self.scale), sec]))))
+                _r = " ".join(list(map(str, ([e_r, (e_t * self.scale), sec, _iter]))))
                 f.write(q + t + _r + "\n")
                 
         # Reset List
